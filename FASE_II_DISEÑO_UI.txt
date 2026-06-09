@@ -1,0 +1,402 @@
+════════════════════════════════════════════════════════════════════════════════
+  FASE II: REDISEÑO UI + GRÁFICOS INTERACTIVOS
+  Objetivo: Interfaz moderna, visual, responsive
+════════════════════════════════════════════════════════════════════════════════
+
+SEMANAS: 5-8 (4 semanas)
+INVERSIÓN: Media
+IMPACTO: Alto (diferencializador visual)
+
+════════════════════════════════════════════════════════════════════════════════
+SEMANA 5: DESIGN SYSTEM (Paleta + Tipografía + Espaciado)
+════════════════════════════════════════════════════════════════════════════════
+
+ARCHIVO A CREAR: src/design_system.py
+
+```python
+"""
+Design System - Paleta de colores, tipografía, espaciado
+Garantiza consistencia visual en toda la app
+"""
+
+# ════════════════════════════════════════════════════════════════════════════
+# PALETA DE COLORES
+# ════════════════════════════════════════════════════════════════════════════
+
+class Colors:
+    # Primarios
+    PRIMARY = "#1E3A8A"          # Azul oscuro (botones, headers)
+    PRIMARY_LIGHT = "#3B82F6"    # Azul claro (hover)
+    PRIMARY_DARK = "#1E40AF"     # Azul muy oscuro (active)
+    
+    # Secundarios
+    SUCCESS = "#10B981"          # Verde (victorias, OK)
+    WARNING = "#F59E0B"          # Amarillo (advertencias)
+    DANGER = "#EF4444"           # Rojo (derrotas, errores)
+    INFO = "#06B6D4"             # Cyan (información)
+    
+    # Neutrales
+    WHITE = "#FFFFFF"
+    BLACK = "#000000"
+    GRAY_50 = "#F9FAFB"
+    GRAY_100 = "#F3F4F6"
+    GRAY_200 = "#E5E7EB"
+    GRAY_300 = "#D1D5DB"
+    GRAY_400 = "#9CA3AF"
+    GRAY_500 = "#6B7280"
+    GRAY_600 = "#4B5563"
+    GRAY_700 = "#374151"
+    GRAY_800 = "#1F2937"
+    GRAY_900 = "#111827"
+    
+    # Modo Oscuro
+    DARK_BG = "#0F172A"
+    DARK_SURFACE = "#1E293B"
+    DARK_TEXT = "#E2E8F0"
+
+# ════════════════════════════════════════════════════════════════════════════
+# TIPOGRAFÍA
+# ════════════════════════════════════════════════════════════════════════════
+
+class Typography:
+    FONT_FAMILY = "Segoe UI, Arial, sans-serif"
+    
+    # Tamaños
+    H1_SIZE = 32
+    H2_SIZE = 28
+    H3_SIZE = 24
+    H4_SIZE = 20
+    BODY_SIZE = 14
+    SMALL_SIZE = 12
+    
+    # Pesos
+    REGULAR = 400
+    MEDIUM = 500
+    BOLD = 700
+
+# ════════════════════════════════════════════════════════════════════════════
+# ESPACIADO (Sistema 4px)
+# ════════════════════════════════════════════════════════════════════════════
+
+class Spacing:
+    XS = 4      # 4px
+    SM = 8      # 8px
+    MD = 16     # 16px
+    LG = 24     # 24px
+    XL = 32     # 32px
+    XXL = 48    # 48px
+
+# ════════════════════════════════════════════════════════════════════════════
+# BORDES Y ESQUINAS
+# ════════════════════════════════════════════════════════════════════════════
+
+class Border:
+    RADIUS_SM = 4
+    RADIUS_MD = 8
+    RADIUS_LG = 12
+    
+    WIDTH_THIN = 1
+    WIDTH_NORMAL = 2
+    WIDTH_THICK = 4
+
+# ════════════════════════════════════════════════════════════════════════════
+# SOMBRAS
+# ════════════════════════════════════════════════════════════════════════════
+
+class Shadows:
+    NONE = "0 0 0 rgba(0,0,0,0)"
+    SM = "0 1px 2px 0 rgba(0,0,0,0.05)"
+    MD = "0 4px 6px -1px rgba(0,0,0,0.1)"
+    LG = "0 10px 15px -3px rgba(0,0,0,0.1)"
+    XL = "0 20px 25px -5px rgba(0,0,0,0.1)"
+
+# ════════════════════════════════════════════════════════════════════════════
+# BREAKPOINTS (Responsive)
+# ════════════════════════════════════════════════════════════════════════════
+
+class Breakpoints:
+    MOBILE = 480      # Móviles
+    TABLET = 768      # Tablets
+    DESKTOP = 1024    # Desktop
+    WIDE = 1280       # Wide
+
+# ════════════════════════════════════════════════════════════════════════════
+# TRANSICIONES (Animaciones suaves)
+# ════════════════════════════════════════════════════════════════════════════
+
+class Transitions:
+    FAST = 150        # ms (hover effects)
+    NORMAL = 300      # ms (general transitions)
+    SLOW = 500        # ms (page transitions)
+```
+
+════════════════════════════════════════════════════════════════════════════════
+SEMANA 6: NUEVOS COMPONENTES (ui_components_v2.py)
+════════════════════════════════════════════════════════════════════════════════
+
+ARCHIVO A CREAR: src/ui_components_v2.py
+
+```python
+"""
+Componentes UI modernos - Tarjetas, Alertas, Modales, Gráficos
+Compatible con ttkbootstrap pero con estilo mejorado
+"""
+
+import tkinter as tk
+import ttkbootstrap as tb
+from tkinter import messagebox
+from src.design_system import Colors, Typography, Spacing
+
+# ════════════════════════════════════════════════════════════════════════════
+# CARD COMPONENT
+# ════════════════════════════════════════════════════════════════════════════
+
+class Card(tb.Frame):
+    """Componente tarjeta moderna con sombra y espaciado."""
+    
+    def __init__(self, parent, title="", content="", icon="", **kwargs):
+        super().__init__(parent, **kwargs)
+        self.config(bg=Colors.WHITE, relief="flat")
+        
+        # Header con título
+        if title:
+            header = tb.Frame(self, padding=Spacing.MD)
+            header.pack(fill="x")
+            
+            if icon:
+                tb.Label(header, text=icon, font=("Arial", 16)).pack(side="left", padx=5)
+            
+            tb.Label(header, text=title, font=(Typography.FONT_FAMILY, Typography.H4_SIZE, "bold")).pack(side="left")
+        
+        # Contenido
+        if content:
+            body = tb.Frame(self, padding=Spacing.MD)
+            body.pack(fill="both", expand=True)
+            tb.Label(body, text=content, wraplength=300).pack()
+
+# ════════════════════════════════════════════════════════════════════════════
+# ALERT COMPONENT
+# ════════════════════════════════════════════════════════════════════════════
+
+class Alert(tb.Frame):
+    """Componente alerta (success, warning, error, info)."""
+    
+    def __init__(self, parent, message, alert_type="info", **kwargs):
+        super().__init__(parent, **kwargs)
+        
+        color_map = {
+            "success": (Colors.SUCCESS, "✓"),
+            "warning": (Colors.WARNING, "⚠"),
+            "error": (Colors.DANGER, "✗"),
+            "info": (Colors.INFO, "ℹ")
+        }
+        
+        color, icon = color_map.get(alert_type, color_map["info"])
+        self.config(bg=color, height=2)
+        
+        frame = tb.Frame(self, padding=Spacing.MD)
+        frame.pack(fill="x")
+        
+        tb.Label(frame, text=f"{icon} {message}", foreground="white").pack(side="left")
+
+# ════════════════════════════════════════════════════════════════════════════
+# STAT WIDGET (Métrica numérica)
+# ════════════════════════════════════════════════════════════════════════════
+
+class StatWidget(tb.Frame):
+    """Muestra métrica: número grande + label."""
+    
+    def __init__(self, parent, label="", value=0, color=Colors.PRIMARY, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.config(bg=Colors.GRAY_50, relief="flat", padding=Spacing.LG)
+        
+        # Valor grande
+        tb.Label(self, text=str(value), font=(Typography.FONT_FAMILY, 32, "bold"), 
+                foreground=color).pack()
+        
+        # Label pequeño
+        tb.Label(self, text=label, font=(Typography.FONT_FAMILY, 12), 
+                foreground=Colors.GRAY_600).pack()
+
+# ════════════════════════════════════════════════════════════════════════════
+# BADGE (Etiqueta)
+# ════════════════════════════════════════════════════════════════════════════
+
+class Badge(tb.Label):
+    """Etiqueta pequeña con color de fondo."""
+    
+    def __init__(self, parent, text="", color=Colors.PRIMARY, **kwargs):
+        super().__init__(parent, text=text, **kwargs)
+        self.config(
+            background=color,
+            foreground="white",
+            font=(Typography.FONT_FAMILY, 11, "bold"),
+            padding=(Spacing.SM, Spacing.XS)
+        )
+```
+
+════════════════════════════════════════════════════════════════════════════════
+SEMANA 7: GRÁFICOS INTERACTIVOS (matplotlib/plotly)
+════════════════════════════════════════════════════════════════════════════════
+
+ARCHIVO A CREAR: src/charts.py
+
+```python
+"""
+Gráficos interactivos para estadísticas
+Usa matplotlib embebido en Tkinter
+"""
+
+import tkinter as tk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+import numpy as np
+
+class ChartWidget(tk.Frame):
+    """Frame que contiene un gráfico matplotlib."""
+    
+    def __init__(self, parent, chart_type="line", **kwargs):
+        super().__init__(parent, **kwargs)
+        self.chart_type = chart_type
+        self.figure = None
+        self.canvas = None
+    
+    def plot_evolution(self, equipos_data, title="Evolución de Puntos"):
+        """Gráfico de líneas: evolución de puntos."""
+        self.figure = Figure(figsize=(10, 5), dpi=100)
+        ax = self.figure.add_subplot(111)
+        
+        for eq_name, points in equipos_data.items():
+            ax.plot(points, marker='o', label=eq_name, linewidth=2)
+        
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.set_xlabel("Jornada")
+        ax.set_ylabel("Puntos")
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+        
+        self._render_canvas()
+    
+    def plot_bars(self, data, title="Goles por Equipo"):
+        """Gráfico de barras."""
+        self.figure = Figure(figsize=(10, 5), dpi=100)
+        ax = self.figure.add_subplot(111)
+        
+        equipos = list(data.keys())
+        goles = list(data.values())
+        colors = plt.cm.Blues(np.linspace(0.4, 0.8, len(equipos)))
+        
+        ax.bar(equipos, goles, color=colors)
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.set_ylabel("Goles")
+        
+        self._render_canvas()
+    
+    def _render_canvas(self):
+        """Renderizar el canvas."""
+        if self.canvas:
+            self.canvas.get_tk_widget().destroy()
+        
+        self.canvas = FigureCanvasTkAgg(self.figure, master=self)
+        self.canvas.get_tk_widget().pack(fill="both", expand=True)
+        self.canvas.draw()
+```
+
+════════════════════════════════════════════════════════════════════════════════
+SEMANA 8: INTEGRACIÓN EN APP PRINCIPAL
+════════════════════════════════════════════════════════════════════════════════
+
+MODIFICAR: app_maestra_futbol.py
+
+CAMBIOS:
+1. Importar design_system.py
+2. Importar ui_components_v2.py
+3. Importar charts.py
+4. Actualizar colores de botones/labels con Colors.PRIMARY, etc.
+5. Reemplazar componentes antiguos con nuevos (Card, StatWidget)
+6. Agregar gráficos en dashboard
+
+EJEMPLO DE CAMBIO:
+
+--- ANTES (antigua):
+tb.Button(frm, text="Agregar Equipo", bootstyle=SUCCESS)
+
+--- DESPUÉS (moderna):
+tb.Button(frm, text="Agregar Equipo", 
+         background=Colors.SUCCESS,
+         foreground="white",
+         font=(Typography.FONT_FAMILY, 12, "bold"),
+         padx=Spacing.MD, pady=Spacing.SM)
+
+NUEVAS SECCIONES EN DASHBOARD:
+
+1. Panel de Progreso
+   ├─ StatWidget: Partidos jugados
+   ├─ StatWidget: Equipos activos
+   └─ StatWidget: Goles totales
+
+2. Gráficos
+   ├─ ChartWidget: Evolución de puntos
+   ├─ ChartWidget: Top goleadores (barras)
+   └─ ChartWidget: Rendimiento local/visitante (radar)
+
+3. Tabla mejorada
+   ├─ Headers con colores
+   ├─ Filas alternadas
+   └─ Hover effects
+
+════════════════════════════════════════════════════════════════════════════════
+DEPENDENCIAS A INSTALAR (SEMANA 7)
+════════════════════════════════════════════════════════════════════════════════
+
+pip install matplotlib
+
+════════════════════════════════════════════════════════════════════════════════
+GIT COMMITS POR SEMANA
+════════════════════════════════════════════════════════════════════════════════
+
+SEMANA 5:
+git commit -m "feat: Add Design System - colors, typography, spacing"
+
+SEMANA 6:
+git commit -m "feat: Create modern UI components - Card, Alert, StatWidget, Badge"
+
+SEMANA 7:
+git commit -m "feat: Add interactive charts with matplotlib"
+
+SEMANA 8:
+git commit -m "feat: Integrate modern UI in app_maestra_futbol.py"
+
+════════════════════════════════════════════════════════════════════════════════
+BENEFICIOS DE FASE II
+════════════════════════════════════════════════════════════════════════════════
+
+VISUAL:
+✅ Interfaz moderna y profesional
+✅ Consistencia de colores y tipografía
+✅ Animaciones suaves
+✅ Tema oscuro/claro (opcional)
+
+FUNCIONAL:
+✅ Gráficos interactivos
+✅ Componentes reutilizables
+✅ Mejor UX (más intuitiva)
+✅ Responsive (se adapta a ventana)
+
+NEGOCIO:
+✅ Diferencial visual vs competencia
+✅ Fácil de personalizar (cambiar colores en design_system.py)
+✅ Atrae más usuarios
+✅ Versión "premium" lista para mercado
+
+════════════════════════════════════════════════════════════════════════════════
+PRÓXIMO DESPUÉS DE FASE II
+════════════════════════════════════════════════════════════════════════════════
+
+FASE III: WebSockets (actualizaciones en tiempo real)
+- Notificaciones automáticas
+- Live scoring
+- Actualización de clasificación sin refrescar
+
+════════════════════════════════════════════════════════════════════════════════

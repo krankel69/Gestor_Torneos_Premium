@@ -1,0 +1,302 @@
+════════════════════════════════════════════════════════════════════════════════
+  INTEGRACIÓN FASE II - Actualizar app_maestra_futbol.py
+  Reemplazar UI antigua por Design System moderno
+════════════════════════════════════════════════════════════════════════════════
+
+OBJETIVO: Usar design_system.py, ui_components_v2.py, charts.py en la app
+
+CAMBIOS A HACER:
+
+1. Importar nuevos módulos al inicio de app_maestra_futbol.py
+2. Reemplazar colores hardcoded por Colors del design system
+3. Usar StatWidget en dashboard para métricas
+4. Usar Card para secciones principales
+5. Integrar gráficos con Plotly
+
+════════════════════════════════════════════════════════════════════════════════
+PASO 1: AGREGAR IMPORTS AL INICIO DE app_maestra_futbol.py
+════════════════════════════════════════════════════════════════════════════════
+
+Busca esta línea en app_maestra_futbol.py:
+---
+from ui_components import (AutocompleteCombobox, VentanaGoleadores, DialogoCrearTorneo, DialogoEditarResultado)
+---
+
+Agrega DESPUÉS:
+---
+from design_system import Colors, Typography, Spacing, Border
+from ui_components_v2 import Card, Alert, StatWidget, Badge
+from charts import ChartWidget
+---
+
+Código completo de imports (al inicio del archivo):
+
+```python
+import tkinter as tk
+from tkinter import ttk, messagebox, filedialog
+import ttkbootstrap as tb
+from tkinter.ttk import Treeview, Notebook
+from pathlib import Path
+import sqlite3
+import os
+from datetime import datetime
+import sys
+import csv
+import json
+from tkinter import LEFT, RIGHT, TOP, BOTTOM, X, Y, BOTH, W, E, CENTER
+import traceback
+import io
+import unicodedata
+from collections import Counter
+
+# Importar módulos propios
+from database import GestorBaseDeDatos
+from ui_components import (AutocompleteCombobox, VentanaGoleadores, 
+                          DialogoCrearTorneo, DialogoEditarResultado)
+
+# NUEVO: Importar Design System y componentes modernos
+from design_system import Colors, Typography, Spacing, Border
+from ui_components_v2 import Card, Alert, StatWidget, Badge
+from charts import ChartWidget
+```
+
+════════════════════════════════════════════════════════════════════════════════
+PASO 2: ACTUALIZAR PANEL DE CONTROL (Dashboard)
+════════════════════════════════════════════════════════════════════════════════
+
+En app_maestra_futbol.py, busca el método: _ui_panel_control()
+
+Reemplaza la sección de "Progreso" y "Destacados" con esto:
+
+ANTES:
+---
+Código antiguo con labels simples
+---
+
+DESPUÉS:
+---
+def _ui_panel_control(self, parent):
+    """Panel de control con componentes modernos."""
+    
+    # ════════════════════════════════════════════════════════════════
+    # SECCIÓN 1: MÉTRICAS
+    # ════════════════════════════════════════════════════════════════
+    
+    frm_metricas = tb.LabelFrame(parent, text="📊 Progreso de Temporada", 
+                                  padding=Spacing.LG)
+    frm_metricas.pack(fill=X, padx=Spacing.MD, pady=Spacing.MD)
+    
+    # Obtener datos para métricas
+    try:
+        clas = self.db.recalcular_y_obtener_clasificacion()
+        partidos = self.db.obtener_partidos()
+        
+        total_partidos = len([p for p in partidos if dict(p).get('jugado', 0) == 1])
+        total_equipos = len(clas)
+        total_goles = sum(dict(p).get('gf', 0) for p in clas)
+    except:
+        total_partidos = 0
+        total_equipos = 0
+        total_goles = 0
+    
+    # Row de métricas con StatWidget
+    frm_stats = tb.Frame(frm_metricas)
+    frm_stats.pack(fill=X, pady=Spacing.MD)
+    
+    # StatWidget 1: Partidos jugados
+    stat1 = StatWidget(frm_stats, label="Partidos Jugados", value=total_partidos,
+                      color=Colors.PRIMARY)
+    stat1.pack(side=LEFT, padx=Spacing.SM, expand=True, fill=BOTH)
+    
+    # StatWidget 2: Equipos activos
+    stat2 = StatWidget(frm_stats, label="Equipos", value=total_equipos,
+                      color=Colors.SUCCESS)
+    stat2.pack(side=LEFT, padx=Spacing.SM, expand=True, fill=BOTH)
+    
+    # StatWidget 3: Goles totales
+    stat3 = StatWidget(frm_stats, label="Goles Totales", value=total_goles,
+                      color=Colors.WARNING)
+    stat3.pack(side=LEFT, padx=Spacing.SM, expand=True, fill=BOTH)
+    
+    # ════════════════════════════════════════════════════════════════
+    # SECCIÓN 2: TOP GOLEADORES
+    # ════════════════════════════════════════════════════════════════
+    
+    frm_top = tb.LabelFrame(parent, text="⚽ Top Goleadores", padding=Spacing.LG)
+    frm_top.pack(fill=X, padx=Spacing.MD, pady=Spacing.MD)
+    
+    try:
+        goleadores = self.db.obtener_goleadores_top()[:5]
+        
+        for i, g in enumerate(goleadores, 1):
+            g_dict = dict(g) if hasattr(g, 'keys') else g
+            nombre = g_dict.get('jugador', 'N/A')
+            goles = g_dict.get('goles', 0)
+            
+            frm_gol = tb.Frame(frm_top)
+            frm_gol.pack(fill=X, pady=Spacing.XS)
+            
+            # Numero de posición
+            tb.Label(frm_gol, text=f"{i}.", width=3, 
+                    font=(Typography.FONT_FAMILY, 12, "bold")).pack(side=LEFT, padx=Spacing.SM)
+            
+            # Nombre
+            tb.Label(frm_gol, text=nombre, width=20).pack(side=LEFT, padx=Spacing.SM)
+            
+            # Goles con badge
+            badge = Badge(frm_gol, text=f"{goles} goles", color=Colors.DANGER)
+            badge.pack(side=RIGHT, padx=Spacing.SM)
+    except:
+        tb.Label(frm_top, text="Sin datos").pack()
+    
+    # ════════════════════════════════════════════════════════════════
+    # SECCIÓN 3: TABLA DE CLASIFICACIÓN (mejorada)
+    # ════════════════════════════════════════════════════════════════
+    
+    frm_tabla = tb.LabelFrame(parent, text="🏆 Clasificación Actual", 
+                              padding=Spacing.LG)
+    frm_tabla.pack(fill=BOTH, expand=True, padx=Spacing.MD, pady=Spacing.MD)
+    
+    # Aquí va la tabla de clasificación existente
+    # (mantener igual que antes)
+```
+
+════════════════════════════════════════════════════════════════════════════════
+PASO 3: AGREGAR BOTÓN DE GRÁFICOS (Opcional - Semana 8)
+════════════════════════════════════════════════════════════════════════════════
+
+En el panel de control, agregar botón para mostrar gráficos:
+
+```python
+frm_graficos = tb.Frame(parent, padding=Spacing.LG)
+frm_graficos.pack(fill=X, padx=Spacing.MD, pady=Spacing.MD)
+
+tb.Button(frm_graficos, text="📈 Ver Gráficos", bootstyle=PRIMARY,
+         command=self._mostrar_graficos).pack(fill=X, pady=Spacing.SM)
+
+# Agregar método en la clase:
+
+def _mostrar_graficos(self):
+    """Mostrar gráficos interactivos."""
+    try:
+        chart = ChartWidget()
+        
+        # Gráfico de goles por equipo
+        clas = self.db.recalcular_y_obtener_clasificacion()
+        datos_goles = {
+            dict(eq).get('nombre'): dict(eq).get('gf', 0)
+            for eq in clas
+        }
+        
+        chart.plot_bars(datos_goles, "Goles por Equipo")
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo mostrar gráficos: {e}")
+```
+
+════════════════════════════════════════════════════════════════════════════════
+PASO 4: ACTUALIZAR COLORES DE BOTONES
+════════════════════════════════════════════════════════════════════════════════
+
+Reemplazar todos estos patrones:
+
+ANTES:
+---
+tb.Button(frm, text="Agregar", bootstyle=SUCCESS)
+---
+
+DESPUÉS:
+---
+tb.Button(frm, text="Agregar", bootstyle=PRIMARY,
+         background=Colors.SUCCESS, foreground="white")
+---
+
+O para mayor consistencia, usar directamente:
+
+```python
+tb.Button(frm, text="Agregar Equipo", 
+         background=Colors.SUCCESS,
+         foreground="white",
+         font=(Typography.FONT_FAMILY, 11, "bold"),
+         padx=Spacing.MD, pady=Spacing.SM)
+```
+
+════════════════════════════════════════════════════════════════════════════════
+PASO 5: ACTUALIZAR TABLA DE CLASIFICACIÓN (Colores)
+════════════════════════════════════════════════════════════════════════════════
+
+En _refresh_clasificacion(), agregar colores alternados:
+
+```python
+def _refresh_clasificacion(self):
+    if not hasattr(self, "tree_clas"): return
+    self.tree_clas.delete(*self.tree_clas.get_children())
+    clas = self.db.recalcular_y_obtener_clasificacion()
+    
+    for i, _eq in enumerate(clas, 1):
+        eq = dict(_eq)
+        dif = eq.get("gf",0) - eq.get("gc",0)
+        
+        racha = self._obtener_racha(eq["nombre"])
+        rend_local = self._obtener_rendimiento_local(eq["nombre"])
+        rend_visitante = self._obtener_rendimiento_visitante(eq["nombre"])
+        
+        # Insertar fila
+        self.tree_clas.insert("","end", values=(
+            i, eq.get("nombre",""),
+            eq.get("pj",0), eq.get("pg",0), eq.get("pe",0), eq.get("pp",0),
+            eq.get("gf",0), eq.get("gc",0),
+            f"+{dif}" if dif > 0 else str(dif),
+            eq.get("pts",0),
+            racha, rend_local, rend_visitante
+        ))
+        
+        # Colorear filas (alternadas)
+        if i % 2 == 0:
+            self.tree_clas.item(self.tree_clas.get_children()[-1], tags=('evenrow',))
+    
+    # Configurar tags para colores alternados
+    self.tree_clas.tag_configure('evenrow', background=Colors.GRAY_50)
+```
+
+════════════════════════════════════════════════════════════════════════════════
+CHECKLIST INTEGRACIÓN
+════════════════════════════════════════════════════════════════════════════════
+
+[ ] Agregar imports de design_system, ui_components_v2, charts
+[ ] Reemplazar _ui_panel_control() con nueva versión
+[ ] Agregar StatWidget para métricas
+[ ] Agregar Badge para goleadores
+[ ] Agregar botón de gráficos (opcional)
+[ ] Actualizar colores de botones
+[ ] Colorear tabla de clasificación alternada
+[ ] Pruebas de interfaz
+
+════════════════════════════════════════════════════════════════════════════════
+GIT COMMIT FINAL FASE II
+════════════════════════════════════════════════════════════════════════════════
+
+git add app_maestra_futbol.py
+git commit -m "feat: Integrate FASE II - Modern UI with Design System in dashboard"
+git log --oneline
+```
+
+Deberías ver:
+```
+abc1234 feat: Integrate FASE II - Modern UI
+7a3d820 feat: Complete FASE I - API REST
+```
+
+════════════════════════════════════════════════════════════════════════════════
+RESULTADO FINAL
+════════════════════════════════════════════════════════════════════════════════
+
+✅ Dashboard moderno con:
+   - Métricas en StatWidget
+   - Top goleadores con badges
+   - Tabla clasificación con colores alternados
+   - Botón de gráficos interactivos
+   - Design System consistente (colores, espaciado)
+
+════════════════════════════════════════════════════════════════════════════════
+PRÓXIMO: FASE III (WebSockets - Actualizaciones en tiempo real)
+════════════════════════════════════════════════════════════════════════════════
