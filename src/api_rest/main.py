@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from api_rest.routes.equipos import router as equipos_router
+from api_rest.routes.partidos import router as partidos_router
+from api_rest.routes.goleadores import router as goleadores_router
+from api_rest.routes.clasificacion import router as clasificacion_router
 
 app = FastAPI(
     title="Gestor Premium de Torneos API",
@@ -25,6 +28,9 @@ async def health():
     return {"status": "healthy"}
 
 app.include_router(equipos_router)
+app.include_router(partidos_router)
+app.include_router(goleadores_router)
+app.include_router(clasificacion_router)
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
