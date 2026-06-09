@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from api_rest.routes.equipos import router as equipos_router
 
 app = FastAPI(
     title="Gestor Premium de Torneos API",
@@ -22,13 +24,18 @@ async def root():
 async def health():
     return {"status": "healthy"}
 
-@app.get("/api/equipos")
-async def get_equipos():
-    return {"status": "TODO"}
+app.include_router(equipos_router)
 
-@app.get("/api/partidos")
-async def get_partidos():
-    return {"status": "TODO"}
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "status": "error",
+            "message": str(exc),
+            "type": exc.__class__.__name__
+        }
+    )
 
 if __name__ == "__main__":
     import uvicorn
