@@ -1,0 +1,167 @@
+════════════════════════════════════════════════════════════════════════════════
+  📊 NUEVO DASHBOARD VISUAL — TAB "GRUPOS Y RESULTADOS"
+════════════════════════════════════════════════════════════════════════════════
+
+¡NOVEDAD!
+════════════════════════════════════════════════════════════════════════════════
+
+El tab "Grupos y Resultados" ha sido completamente rediseñado con un nuevo
+dashboard visual que funciona para:
+
+✅ MUNDIAL 2026 (12 grupos: A-L)
+✅ EUROCOPA (4 grupos: A-D)
+✅ CHAMPIONS LEAGUE (8 grupos: A-H)
+✅ LIGA (Jornadas 1-38)
+
+════════════════════════════════════════════════════════════════════════════════
+ESTRUCTURA DEL NUEVO DASHBOARD
+════════════════════════════════════════════════════════════════════════════════
+
+ZONA 1: Selector de Grupos
+┌─────────────────────────────────────────────────────┐
+│  [A] [B] [C] [D] [E] [F] [G] [H] [I] [J] [K] [L]  │  ← Click aquí
+└─────────────────────────────────────────────────────┘
+
+ZONA 2: Partidos del Grupo Seleccionado
+┌────────────────────────────────────────────────────┐
+│ 📅 Partidos del Grupo                              │
+├────────────────────────────────────────────────────┤
+│ Fecha   │ Local           │ Visitante     │ Res.  │
+├─────────┼─────────────────┼───────────────┼───────┤
+│ 11/6    │ México          │ Sudáfrica     │ 1–1  │
+│ 11/6    │ Rep. Checa      │ Francia       │ –    │
+└────────────────────────────────────────────────────┘
+
+ZONA 3: Posiciones del Grupo Seleccionado
+┌────────────────────────────────────────────────────┐
+│ 🏆 Posiciones                                      │
+├───┬──────────────┬────┬────┬────┬────┬────┬───┐  │
+│ Pos│ Equipo       │ PJ │ PG │ PE │ PP │ GF │ GC│ PTS
+├───┼──────────────┼────┼────┼────┼────┼────┼───┤  │
+│ 1  │ México       │ 1  │ 0  │ 1  │ 0  │ 1  │ 1 │ 1   ← Verde = Clasificado
+│ 2  │ Sudáfrica    │ 1  │ 0  │ 1  │ 0  │ 1  │ 1 │ 1   ← Verde = Clasificado
+│ 3  │ Rep. Checa   │ 0  │ 0  │ 0  │ 0  │ 0  │ 0 │ 0   ← Rojo = Eliminado
+│ 4  │ Francia      │ 0  │ 0  │ 0  │ 0  │ 0  │ 0 │ 0   ← Rojo = Eliminado
+└────────────────────────────────────────────────────┘
+
+ZONA 4: Panel de Resultados (Derecha)
+┌──────────────────────────────────────┐
+│ Panel de Resultados                  │
+├──────────────────────────────────────┤
+│ Partido: [México vs Sudáfrica      ] │
+│                                      │
+│ Goles Local:     [2]                │
+│ Goles Visitante: [1]                │
+│                                      │
+│ Equipo:  [México                   ] │
+│ Jugador: [Hirving Lozano           ] │
+│ Goles:   [1]                        │
+│                                      │
+│ [✅ Grabar Marcador]  [← Primero]   │
+│ [⚽ Añadir Goleador]  [← Después]   │
+│ [🔄 Refrescar]                      │
+│                                      │
+│ ⚽ Top Goleadores                   │
+│ ─────────────────────────────────── │
+│ 1. Mbappé          │ 2 goles       │
+│ 2. Messi           │ 1 gol         │
+└──────────────────────────────────────┘
+
+════════════════════════════════════════════════════════════════════════════════
+CÓMO USAR
+════════════════════════════════════════════════════════════════════════════════
+
+PASO 1: Seleccionar Grupo
+─────────────────────────
+Click en un botón de grupo: [A] [B] [C] ... etc.
+→ Automáticamente carga:
+  · Partidos de ese grupo
+  · Posiciones actuales
+  · Combo de partidos disponibles
+
+PASO 2: Registrar Resultado
+────────────────────────────
+1. Combo "Partido:" → selecciona un partido
+2. Campos "Goles Local" y "Goles Visitante" → se pre-llenan si ya tiene resultado
+3. Click [✅ Grabar Marcador]
+4. ✓ Se actualiza tabla de posiciones automáticamente
+
+PASO 3: Añadir Goleadores (Opcional)
+─────────────────────────────────────
+1. Selecciona el mismo partido (ya debe tener goles grabados)
+2. Combo "Equipo:" → auto-rellena con los equipos del partido
+3. Combo "Jugador:" → selecciona jugador
+4. Spinbox "Goles:" → cantidad de goles del jugador
+5. Click [⚽ Añadir Goleador]
+6. Repite para cada goleador
+
+PASO 4: Ver Cambios
+───────────────────
+Click [🔄 Refrescar] para actualizar todas las tablas manualmente
+(También se actualiza automáticamente al grabar resultado)
+
+════════════════════════════════════════════════════════════════════════════════
+COLORES Y SIGNIFICADOS (MUNDIAL)
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 Verde (Posiciones 1-2)  → Clasificado a Octavos de Final
+🔴 Rojo (Posiciones 3-4)   → Eliminado de la competición
+
+(Los colores se aplican automáticamente según la posición)
+
+════════════════════════════════════════════════════════════════════════════════
+VENTAJAS DEL NUEVO DISEÑO
+════════════════════════════════════════════════════════════════════════════════
+
+✅ Más visual y profesional (como un fixture real)
+✅ Ver partidos y posiciones del grupo en la misma pantalla
+✅ Cambiar de grupo con un click (A → B → C → ...)
+✅ Actualización en tiempo real al grabar resultados
+✅ Funciona igual para Liga, Champions, Mundial, Eurocopa
+✅ Tablas claras con colores intuitivos
+✅ Panel de control en la misma vista (no hace falta minimizar/maximizar)
+
+════════════════════════════════════════════════════════════════════════════════
+EJEMPLOS POR TIPO DE TORNEO
+════════════════════════════════════════════════════════════════════════════════
+
+MUNDIAL 2026:
+· Botones: [A] [B] [C] ... [L] (12 grupos)
+· Cada grupo: 4 equipos, 6 partidos
+· Posiciones: los 2 primeros clasifican a Octavos
+
+CHAMPIONS LEAGUE:
+· Botones: [A] [B] [C] ... [H] (8 grupos)
+· Cada grupo: 4 equipos, 6 partidos
+· Posiciones: los 2 primeros clasifican a Octavos
+
+EUROCOPA:
+· Botones: [A] [B] [C] [D] (4 grupos)
+· Cada grupo: 4 equipos, 6 partidos
+· Posiciones: los 2 primeros + 4 mejores terceros
+
+LIGA:
+· Botones: [Jornada 1] [Jornada 2] ... [Jornada 38]
+· Cada jornada: todos los equipos se enfrentan
+· Posiciones: clasificación general (sin agrupar por jornada, es acumulativo)
+
+════════════════════════════════════════════════════════════════════════════════
+CONSEJOS
+════════════════════════════════════════════════════════════════════════════════
+
+1. Graba el marcador PRIMERO (goles local/visitante)
+   Luego añade los goleadores individuales
+
+2. Si olvidas un goleador, puedes agregar más después
+   (El partido sigue visible en el combo)
+
+3. Para cambiar de grupo rápidamente, usa los botones superiores
+   No necesitas ir a otro tab
+
+4. Si quieres ver todos los equipos de todos los grupos,
+   usa el tab "Equipos y Jugadores" que sigue disponible
+
+5. El doble-clic en la tabla de partidos abre ventana emergente
+   para editar goleadores (alternativa al panel de control)
+
+════════════════════════════════════════════════════════════════════════════════

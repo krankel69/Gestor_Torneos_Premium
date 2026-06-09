@@ -1,0 +1,665 @@
+════════════════════════════════════════════════════════════════════════════════
+  🔒 PLAN PREMIUM SEGURO - Implementación Paso a Paso
+  Prioridad: INTEGRIDAD DE DATOS > VELOCIDAD
+════════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════════════════════
+🔐 PRINCIPIOS FUNDAMENTALES (NO NEGOCIABLES)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. BACKUP FIRST
+   ✓ Backup ANTES de cualquier cambio
+   ✓ Versionado de BD (antes/después)
+   ✓ Git con historial completo
+   ✓ Rollback automático si falla
+
+2. TESTING OBLIGATORIO
+   ✓ Pruebas en BD test (no producción)
+   ✓ Validación de cada feature
+   ✓ Usuarios test antes de release
+   ✓ Logs de todos los cambios
+
+3. SEPARACIÓN DE CONCERNS
+   ✓ Cambios independientes (no juntar)
+   ✓ Cada feature en rama Git separada
+   ✓ Merge solo después de validación
+   ✓ API desacoplada del UI
+
+4. DOCUMENTACIÓN OBLIGATORIA
+   ✓ Registro de cambios (changelog)
+   ✓ Procedimiento de rollback
+   ✓ Instrucciones de instalación
+   ✓ Guía de troubleshooting
+
+════════════════════════════════════════════════════════════════════════════════
+📊 VERSIONING STRATEGY (Semver)
+════════════════════════════════════════════════════════════════════════════════
+
+ACTUAL: v2.0.0 (Estable con FASE 5)
+
+VERSIONES PRÓXIMAS:
+├─ v2.1.0 = API REST (cambio significativo)
+├─ v2.2.0 = UI Rediseño (cambio visual)
+├─ v2.3.0 = Gráficos interactivos
+├─ v2.4.0 = Notificaciones real-time
+├─ v2.5.0 = Monetización
+├─ v2.6.0 = Integraciones
+├─ v3.0.0 = App web React
+└─ v3.1.0 = App mobile (React Native)
+
+REGLA: Bug fix = x.x.Z | Feature = x.Y.0 | Major = X.0.0
+
+════════════════════════════════════════════════════════════════════════════════
+🗄️ ESTRATEGIA DE BACKUPS - CRÍTICO
+════════════════════════════════════════════════════════════════════════════════
+
+ESTRUCTURA DE BACKUPS:
+
+backups/
+├── v2.0.0/
+│   ├── app_maestra_futbol.py (backup completo)
+│   ├── ui_components.py
+│   ├── database.py
+│   ├── liga_futbol_v2.db
+│   ├── mundial_2026_v2.db
+│   ├── champions_gui_v2.db
+│   └── CAMBIOS.log
+├── v2.1.0/
+│   ├── (misma estructura)
+│   └── MIGRATIONS.sql (cambios BD)
+└── ...
+
+PROCEDIMIENTO ANTES DE CADA VERSIÓN:
+
+1. Crear carpeta backup con fecha/versión
+2. Copiar TODOS los archivos .py
+3. Exportar TODAS las BDs como .sql
+4. Documentar cambios realizados
+5. Crear script de rollback
+6. Git commit con tag v2.X.0
+
+════════════════════════════════════════════════════════════════════════════════
+💾 SETUP INICIAL - PREPARACIÓN (AHORA)
+════════════════════════════════════════════════════════════════════════════════
+
+PASO 1: CREAR ESTRUCTURA GIT PROFESIONAL
+
+$ cd D:\Manu\Documentos\FUTBOL\
+$ git init gestor-torneos-premium
+$ cd gestor-torneos-premium
+
+# Crear ramas principales
+$ git branch desarrollo
+$ git branch -a  (verificar: master, desarrollo)
+
+# Estructura de carpetas
+gestor-torneos-premium/
+├── .git/
+├── src/
+│   ├── app_maestra_futbol.py
+│   ├── ui_components.py
+│   ├── database.py
+│   └── api_rest/  (NUEVO - para v2.1.0)
+│       └── main.py
+├── tests/
+│   ├── test_database.py
+│   ├── test_ui.py
+│   └── test_api.py
+├── backups/
+│   ├── v2.0.0/
+│   │   ├── *.py
+│   │   ├── *.db
+│   │   └── CAMBIOS.log
+│   └── ...
+├── docs/
+│   ├── CHANGELOG.md
+│   ├── ARCHITECTURE.md
+│   ├── DEPLOYMENT.md
+│   └── TROUBLESHOOTING.md
+├── requirements.txt
+├── .gitignore
+├── VERSION.txt (contiene: 2.0.0)
+└── README.md
+
+PASO 2: CREAR .gitignore
+
+# .gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.db-journal
+*.egg-info/
+.env
+.venv/
+venv/
+env/
+*.log
+node_modules/
+dist/
+build/
+.DS_Store
+
+PASO 3: CREAR VERSION.txt y CHANGELOG.md
+
+# VERSION.txt
+2.0.0
+
+# CHANGELOG.md
+## [2.0.0] - 2026-06-09
+### Added
+- Fase 0-5 completas
+- Dashboard visual
+- Generador de PDFs
+- Estadísticas avanzadas
+- Ui_components modular
+
+### Security
+- SQLite3 timeout de 10s
+- Conexiones con context managers
+
+═══════════════════════════════════════════════════════════════════════════════
+🗄️ EXPORTAR BDs ACTUALES COMO BACKUP (IMPORTANTE)
+═══════════════════════════════════════════════════════════════════════════════
+
+PASO 4: SCRIPT DE BACKUP AUTOMÁTICO (backup_databases.py)
+
+```python
+import sqlite3
+import os
+import gzip
+from datetime import datetime
+from pathlib import Path
+
+BACKUP_DIR = Path("backups/v2.0.0")
+BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+
+DATABASES = [
+    "D:/Manu/Documentos/FUTBOL/bases_de_datos/liga_futbol_v2.db",
+    "D:/Manu/Documentos/FUTBOL/bases_de_datos/mundial_2026_v2.db",
+    "D:/Manu/Documentos/FUTBOL/bases_de_datos/champions_gui_v2.db",
+    "D:/Manu/Documentos/FUTBOL/bases_de_datos/eurocopa_2024_v2.db",
+]
+
+def backup_database(db_path):
+    """Exporta BD a SQL y comprime."""
+    db_name = Path(db_path).stem
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Conectar y exportar
+    conn = sqlite3.connect(db_path)
+    with open(f"{BACKUP_DIR}/{db_name}.sql", "w") as f:
+        for line in conn.iterdump():
+            f.write(f"{line}\n")
+    conn.close()
+    
+    # Comprimir
+    with open(f"{BACKUP_DIR}/{db_name}.sql", "rb") as f_in:
+        with gzip.open(f"{BACKUP_DIR}/{db_name}_{timestamp}.sql.gz", "wb") as f_out:
+            f_out.writelines(f_in)
+    
+    print(f"✓ Backup: {db_name} exportado")
+
+def create_backup_log():
+    """Documenta el backup."""
+    with open(f"{BACKUP_DIR}/CAMBIOS.log", "w") as f:
+        f.write(f"BACKUP v2.0.0 - {datetime.now()}\n")
+        f.write("Bases de datos exportadas:\n")
+        for db in DATABASES:
+            f.write(f"  ✓ {Path(db).name}\n")
+
+if __name__ == "__main__":
+    for db in DATABASES:
+        if os.path.exists(db):
+            backup_database(db)
+    create_backup_log()
+    print("\n✓ BACKUP COMPLETADO")
+```
+
+Ejecutar: python backup_databases.py
+
+════════════════════════════════════════════════════════════════════════════════
+🔍 TESTING FRAMEWORK (Antes de cambios)
+════════════════════════════════════════════════════════════════════════════════
+
+PASO 5: CREAR tests/test_database.py (Testing BD)
+
+```python
+import unittest
+import sqlite3
+import os
+from pathlib import Path
+from src.database import GestorBaseDeDatos
+
+class TestDatabaseIntegrity(unittest.TestCase):
+    """Pruebas de integridad de BD."""
+    
+    @classmethod
+    def setUpClass(cls):
+        """Crear BD de test."""
+        cls.test_db = "test_liga.db"
+        cls.db = GestorBaseDeDatos(cls.test_db)
+    
+    @classmethod
+    def tearDownClass(cls):
+        """Limpiar BD de test."""
+        if os.path.exists(cls.test_db):
+            os.remove(cls.test_db)
+    
+    def test_agregar_equipo(self):
+        """Verificar que agregar equipo funciona."""
+        resultado = self.db.agregar_equipo("Test FC", "Test City")
+        self.assertTrue(resultado)
+    
+    def test_equipo_duplicado_rechazado(self):
+        """Verificar que no permite duplicados."""
+        self.db.agregar_equipo("Unique FC", "City")
+        resultado = self.db.agregar_equipo("Unique FC", "City")
+        self.assertFalse(resultado)
+    
+    def test_bd_no_corrupta(self):
+        """Verificar integridad de BD."""
+        conn = sqlite3.connect(self.test_db)
+        cursor = conn.execute("PRAGMA integrity_check")
+        result = cursor.fetchone()[0]
+        conn.close()
+        self.assertEqual(result, "ok")
+    
+    def test_recalcular_clasificacion(self):
+        """Verificar recalcular sin errores."""
+        try:
+            resultado = self.db.recalcular_y_obtener_clasificacion()
+            self.assertIsNotNone(resultado)
+        except Exception as e:
+            self.fail(f"recalcular_clasificacion falló: {e}")
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+Ejecutar: python -m pytest tests/ -v
+
+════════════════════════════════════════════════════════════════════════════════
+📈 ROADMAP DETALLADO - 6 MESES (FASE POR FASE)
+════════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════════════════════
+FASE I: ARQUITECTURA API (v2.1.0) - SEMANAS 1-4
+═══════════════════════════════════════════════════════════════════════════════
+
+OBJETIVO: Separar lógica de negocio del UI (Código limpio, testeble)
+
+ESTRUCTURA NUEVA:
+src/
+├── api_rest/
+│   ├── __init__.py
+│   ├── main.py (FastAPI app)
+│   ├── models.py (Pydantic models)
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── equipos.py (GET/POST/PUT/DELETE equipos)
+│   │   ├── partidos.py
+│   │   ├── goleadores.py
+│   │   ├── clasificacion.py
+│   │   └── reportes.py
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── equipo_service.py (lógica de negocio)
+│   │   ├── partido_service.py
+│   │   └── estadistica_service.py
+│   └── schemas/
+│       └── (Pydantic schemas)
+├── database.py (igual, sin cambios)
+├── app_maestra_futbol.py (igual, pero ahora llama a API)
+└── ui_components.py (igual)
+
+PASO A PASO:
+
+SEMANA 1: Setup FastAPI + Documentación
+─────────────────────────────────────────
+1. Instalar: pip install fastapi uvicorn pydantic sqlalchemy
+2. Crear src/api_rest/main.py básico
+3. Documentar en docs/ARCHITECTURE.md
+
+SEMANA 2: Routes (Endpoints)
+─────────────────────────────
+1. Crear routes/equipos.py
+   - GET /api/equipos (lista)
+   - GET /api/equipos/{id} (detalle)
+   - POST /api/equipos (crear)
+   - PUT /api/equipos/{id} (editar)
+   - DELETE /api/equipos/{id} (eliminar)
+
+2. Crear routes/partidos.py (similar)
+3. Crear routes/clasificacion.py (solo GET)
+
+SEMANA 3: Services (Lógica de negocio)
+──────────────────────────────────────
+1. Refactorizar database.py logic → services/
+2. Crear equipo_service.py
+3. Crear partido_service.py
+4. Testing: tests/test_api.py
+
+SEMANA 4: Integración con UI existente
+────────────────────────────────────────
+1. Modificar app_maestra_futbol.py para llamar API (en lugar de BD directo)
+2. Mantener compatibilidad backward (BD local sigue funcionando)
+3. Testing manual completo
+4. Git: merge rama 'api-rest' → desarrollo
+
+VERSIÓN RESULTANTE: v2.1.0
+
+════════════════════════════════════════════════════════════════════════════════
+FASE II: REDISEÑO UI + GRÁFICOS (v2.2.0) - SEMANAS 5-8
+════════════════════════════════════════════════════════════════════════════════
+
+OBJETIVO: Interfaz moderna, visual, responsive
+
+CAMBIOS:
+
+1. TEMA VISUAL (Design System)
+   ├─ Paleta colores: Azul #1E3A8A (primario), Blanco, Grises
+   ├─ Tipografía: Segoe UI, Arial (2 fuentes max)
+   ├─ Iconografía: Font Awesome (no emojis)
+   └─ Espaciado: Sistema 4px, 8px, 16px, 24px
+
+2. COMPONENTES NUEVOS (ui_components_v2.py)
+   ├─ Card componente
+   ├─ Alert/Toast notificaciones
+   ├─ Modal mejorado
+   ├─ Chart wrapper (Plotly)
+   ├─ Tabla responsive
+   └─ Tabs mejorado
+
+3. DASHBOARD NUEVO (antes: 1 panel, después: 4 panels interactivos)
+   ├─ Panel 1: Progreso (gráfico circular)
+   ├─ Panel 2: Próximos 5 partidos (timeline)
+   ├─ Panel 3: Top 5 goleadores (bar chart)
+   ├─ Panel 4: Tabla clasificación (mejorada)
+
+4. GRÁFICOS INTERACTIVOS (Plotly.js)
+   ├─ Evolución de puntos (línea)
+   ├─ Goles (barras)
+   ├─ Racha (colores)
+   └─ Rendimiento local vs visitante (radar)
+
+IMPLEMENTACIÓN:
+
+SEMANA 5: Design System
+───────────────────────
+1. Crear constants.py con colores, spacing
+2. Reemplazar colores hardcoded en UI
+3. Nuevo icono theme
+
+SEMANA 6: Nuevos componentes
+────────────────────────────
+1. Crear ui_components_v2.py (no eliminar v1)
+2. Implementar Card, Alert, Modal
+3. Testing en UI pequeños
+
+SEMANA 7: Gráficos
+──────────────────
+1. Instalar plotly: pip install plotly
+2. Crear utils/charts.py
+3. Integrar en Panel de Control
+4. Testing visual
+
+SEMANA 8: Dashboard completo
+────────────────────────────
+1. Reescribir _ui_panel_control() con nuevos componentes
+2. Integrar gráficos
+3. Testing completo
+4. Git: merge rama 'redesign-v2.2'
+
+VERSIÓN RESULTANTE: v2.2.0
+
+════════════════════════════════════════════════════════════════════════════════
+FASE III: NOTIFICACIONES REAL-TIME (v2.3.0) - SEMANAS 9-12
+════════════════════════════════════════════════════════════════════════════════
+
+OBJETIVO: Actualizaciones automáticas, sin refrescar
+
+IMPLEMENTACIÓN:
+
+SEMANA 9-10: WebSockets backend
+───────────────────────────────
+1. Instalar: pip install python-socketio python-socketio-client
+2. Crear api_rest/websocket.py
+3. Broadcast de partidos:
+   - Cuando se registra gol → notificar a todos
+   - Cuando cambia clasificación → actualizar live
+   - Cuando se agrega goleador → mostrar instantáneo
+
+SEMANA 11: Frontend WebSocket
+──────────────────────────────
+1. Conectar app a WebSocket server
+2. Actualizar tablas en tiempo real (sin usuario clickear)
+3. Toast notifications para eventos
+
+SEMANA 12: Testing + Pulido
+───────────────────────────
+1. Test con múltiples usuarios simultáneos
+2. Manejo de desconexiones
+3. Fallback a polling si WebSocket falla
+
+VERSIÓN RESULTANTE: v2.3.0
+
+════════════════════════════════════════════════════════════════════════════════
+FASE IV: MONETIZACIÓN (v2.4.0) - SEMANAS 13-16
+════════════════════════════════════════════════════════════════════════════════
+
+OBJETIVO: Sistema de planes FREE/PRO/ENTERPRISE
+
+IMPLEMENTACIÓN:
+
+1. CREAR TABLA DE SUSCRIPCIONES EN BD
+
+ALTER TABLE usuarios ADD COLUMN plan TEXT DEFAULT 'free';
+ALTER TABLE usuarios ADD COLUMN plan_fecha_inicio DATETIME;
+ALTER TABLE usuarios ADD COLUMN plan_fecha_fin DATETIME;
+
+2. FEATURE FLAGS POR PLAN
+
+plan_free:
+  ├─ 1 torneo máximo
+  ├─ 20 equipos máximo
+  ├─ Sin PDF
+  └─ Sin análisis
+
+plan_pro ($10/mes):
+  ├─ Torneos ilimitados
+  ├─ Equipos ilimitados
+  ├─ PDF incluido
+  ├─ Análisis básico
+  └─ Notificaciones
+
+plan_enterprise ($50/mes):
+  ├─ Todo de PRO
+  ├─ API access
+  ├─ Soporte prioritario
+  ├─ Integraciones custom
+  └─ White-label
+
+3. INTEGRACIÓN STRIPE
+
+pip install stripe
+
+# payment_service.py
+def crear_suscripcion(usuario_id, plan):
+    stripe.Subscription.create(
+        customer=usuario_id,
+        items=[{"price": PRECIOS[plan]}]
+    )
+
+4. PANEL DE CONTROL DE SUSCRIPCIÓN
+
+├─ Ver plan actual
+├─ Botón cambiar a PRO
+├─ Histórico de pagos
+└─ Cancelar (después mostrar retención email)
+
+VERSIÓN RESULTANTE: v2.4.0
+
+════════════════════════════════════════════════════════════════════════════════
+FASE V: INTEGRACIONES EXTERNAS (v2.5.0) - SEMANAS 17-20
+════════════════════════════════════════════════════════════════════════════════
+
+OBJETIVO: Conectar con servicios externos
+
+IMPLEMENTACIÓN PRIORIZADA:
+
+TIER 1 (Crítico):
+  ✓ Slack (notificaciones)
+  ✓ Email automático (SendGrid)
+
+TIER 2 (Importante):
+  ✓ Google Calendar (sincronizar partidos)
+  ✓ WhatsApp (alertas vía Twilio)
+
+TIER 3 (Nice-to-have):
+  ✓ Zoom (streaming)
+  ✓ Instagram (publicar resultados)
+
+EJEMPLO: SLACK INTEGRATION
+
+pip install slack-sdk
+
+# integrations/slack.py
+def notificar_gol(partido, goleador):
+    """Envía mensaje a Slack cuando se marca gol."""
+    client = slack.WebClient(token=SLACK_TOKEN)
+    client.chat_postMessage(
+        channel="#torneos",
+        text=f"⚽ GOL! {goleador} en {partido['local']} vs {partido['visitante']}"
+    )
+
+VERSIÓN RESULTANTE: v2.5.0
+
+════════════════════════════════════════════════════════════════════════════════
+FASE VI: MOBILE + WEB (v3.0.0) - SEMANAS 21-26
+════════════════════════════════════════════════════════════════════════════════
+
+OBJETIVO: App multiplataforma
+
+IMPLEMENTACIÓN:
+
+OPCIÓN A: MÁXIMA COMPATIBILIDAD (Recomendado)
+  ├─ Frontend web: React.js + API REST
+  ├─ Mobile: React Native (iOS + Android)
+  ├─ Backend: Mismo (FastAPI)
+  └─ BD: Mismo (PostgreSQL en cloud)
+
+OPCIÓN B: MÍNIMO VIABLE
+  ├─ Versión web responsive
+  ├─ App mobile como wrapper (Electron para mobile)
+  └─ Compartir código entre plataformas
+
+TECNOLOGÍAS:
+  ├─ React.js (web)
+  ├─ React Native (mobile)
+  ├─ Expo (herramienta React Native)
+  └─ Firebase (auth + realtime)
+
+VERSIÓN RESULTANTE: v3.0.0
+
+════════════════════════════════════════════════════════════════════════════════
+📋 CHECKLIST SEGURIDAD (EN CADA VERSIÓN)
+════════════════════════════════════════════════════════════════════════════════
+
+Antes de mergear código:
+
+□ Backup de BD de producción
+□ Tests unitarios pasando (100% de nuevos features)
+□ Tests de integración pasando
+□ PRAGMA integrity_check de BD OK
+□ Validación de inputs (SQL injection prevención)
+□ Encriptación de datos sensibles
+□ Documentación actualizada
+□ CHANGELOG actualizado
+□ Script de rollback probado
+□ Revisión de código (si hay otro dev)
+□ Logging de cambios registrado
+□ Performance no degradó
+□ No hay memory leaks
+
+════════════════════════════════════════════════════════════════════════════════
+🚀 DEPLOYMENT SEGURO (Cuando esté listo)
+════════════════════════════════════════════════════════════════════════════════
+
+PASO 1: Backup de producción
+$ python backup_databases.py
+
+PASO 2: Test en BD staging (copia de producción)
+$ python migrate_v2.1.0.py --test-only
+
+PASO 3: Ejecución real (con transacción)
+$ python migrate_v2.1.0.py --execute
+
+PASO 4: Verificación
+$ python verify_migration.py
+
+PASO 5: Rollback si error (automático)
+$ python rollback_to_v2.0.0.py
+
+════════════════════════════════════════════════════════════════════════════════
+📝 DOCUMENTACIÓN (Crítica para no perder conocimiento)
+════════════════════════════════════════════════════════════════════════════════
+
+CREAR:
+
+docs/
+├── ARCHITECTURE.md - Diagrama de componentes
+├── API.md - Documentación de endpoints
+├── DEPLOYMENT.md - Cómo desplegar
+├── MIGRATION.md - Guía migración BD
+├── SECURITY.md - Políticas de seguridad
+├── TROUBLESHOOTING.md - Solución de problemas
+└── CONTRIBUTING.md - Cómo contribuir
+
+════════════════════════════════════════════════════════════════════════════════
+✅ RESUMEN - PRÓXIMOS PASOS AHORA
+════════════════════════════════════════════════════════════════════════════════
+
+1. HOY/MAÑANA:
+   ✓ Crear estructura Git
+   ✓ Hacer backup de v2.0.0
+   ✓ Crear CHANGELOG.md
+   ✓ Crear tests/test_database.py
+
+2. SEMANA 1:
+   ✓ Setup FastAPI
+   ✓ Crear API básica
+   ✓ Testing suite funcional
+
+3. SEMANA 2-4:
+   ✓ Implementar routes
+   ✓ Refactorizar services
+   ✓ Integrar en UI
+
+4. SEMANA 5-8:
+   ✓ Rediseño UI
+   ✓ Gráficos interactivos
+   ✓ Testing visual
+
+5. SEMANA 9-12:
+   ✓ WebSockets real-time
+
+6. SEMANA 13+:
+   ✓ Monetización
+   ✓ Integraciones
+   ✓ Mobile
+
+════════════════════════════════════════════════════════════════════════════════
+🔐 PRINCIPIO FINAL: No sacrifiques seguridad por velocidad
+════════════════════════════════════════════════════════════════════════════════
+
+"Un software lento que funciona vale 1000x más que un software rápido que
+pierde datos."
+
+Siempre:
+✓ Test antes de deploy
+✓ Backup antes de cambio
+✓ Documentar siempre
+✓ Validar inputs siempre
+✓ Encriptar sensibles siempre
+
+════════════════════════════════════════════════════════════════════════════════

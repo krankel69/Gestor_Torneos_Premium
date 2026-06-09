@@ -1,0 +1,231 @@
+════════════════════════════════════════════════════════════════════════════════
+  🏅 CHAMPIONS LEAGUE — FORMATO 2024-25 (LIGUILLA + PLAYOFF + ELIMINATORIAS)
+════════════════════════════════════════════════════════════════════════════════
+
+ESTRUCTURA IMPLEMENTADA
+════════════════════════════════════════════════════════════════════════════════
+
+FASE 1: LIGUILLA
+├─ 36 equipos en 1 tabla única (NO grupos)
+├─ Cada equipo: 8 partidos (4 casa, 4 fuera)
+├─ Puntuación: V=3, E=1, D=0
+└─ Resultado:
+   ├─ Posiciones 1-8 → Octavos directo (verde)
+   ├─ Posiciones 9-24 → Playoff (amarillo)
+   └─ Posiciones 25-36 → Eliminados (rojo)
+
+FASE 2: PLAYOFF
+├─ 16 equipos (posiciones 9-24 de Liguilla)
+├─ Emparejamientos automáticos:
+│  ├─ Posición 9 vs Posición 24
+│  ├─ Posición 10 vs Posición 23
+│  └─ ... (6 más)
+├─ Ida y Vuelta
+└─ 8 ganadores → Octavos
+
+FASE 3: ELIMINATORIAS
+├─ 16 equipos (8 de Liguilla + 8 ganadores Playoff)
+├─ Octavos: 16 → 8 (Ida y Vuelta)
+├─ Cuartos: 8 → 4 (Ida y Vuelta)
+├─ Semifinal: 4 → 2 (Ida y Vuelta)
+└─ Final: 2 → 1 (Partido único)
+
+════════════════════════════════════════════════════════════════════════════════
+TABS EN LA APP
+════════════════════════════════════════════════════════════════════════════════
+
+📋 LIGUILLA
+───────────
+Muestra:
+- Tabla única de 36 equipos
+- Posición, Equipo, PJ, PG, PE, PP, GF, GC, Diferencia, Puntos
+- Colores por zona:
+  🟢 Verde: Posiciones 1-8 (Octavos directo)
+  🟡 Amarillo: Posiciones 9-24 (Playoff)
+  🔴 Rojo: Posiciones 25-36 (Eliminados)
+
+Acciones:
+- Ver clasificación en tiempo real
+- Registrar partidos de liguilla
+- Tabla se actualiza automáticamente
+
+🔥 PLAYOFF
+──────────
+Muestra:
+- Tabla de emparejamientos automáticos
+- Columnas: Cruce, Local, Visitante, IDA, VUELTA, Agregado, Ganador
+
+Acciones:
+- [🎲 Generar Playoff Automático] - Empareja 9-24 automáticamente
+- Registrar resultados de ida y vuelta
+- Calcular ganadores por agregado
+
+Emparejamiento automático:
+- 9 vs 24
+- 10 vs 23
+- 11 vs 22
+- 12 vs 21
+- 13 vs 20
+- 14 vs 19
+- 15 vs 18
+- 16 vs 17
+
+🏆 ELIMINATORIAS
+────────────────
+Muestra:
+- Selector de fase: [Octavos] [Cuartos] [Semifinal] [Final]
+- Tabla de partidos de la fase seleccionada
+- Columnass: Cruce, Local, Visitante, IDA, VUELTA, Agregado, Ganador
+
+Acciones:
+- Registrar resultados de ida y vuelta
+- Calcular ganadores
+- Pasar a siguiente fase automáticamente
+
+════════════════════════════════════════════════════════════════════════════════
+CÓMO USAR
+════════════════════════════════════════════════════════════════════════════════
+
+PASO 1: Importar Equipos (36 total)
+────────────────────────────────────
+Tab: 👥 Equipos y Jugadores
+1. Click [📥 Importar Equipos (CSV)]
+2. Seleccionar archivo CSV con 36 equipos
+3. Importar
+4. ✓ Aparecen en tab 📋 Liguilla
+
+PASO 2: Crear Partidos de Liguilla (8 jornadas)
+────────────────────────────────────────────────
+Opción A: Generador automático (próximamente)
+- Click [🗓 Generar Liguilla Automática]
+- Se crean 8 partidos × 36 equipos
+
+Opción B: Manual
+- Crear partidos individuales en tab 👥 Equipos y Jugadores
+- Asignar fase: "Liguilla" (o "Liga Regular")
+- Asignar jornada: "Jornada 1", "Jornada 2", etc.
+
+PASO 3: Registrar Resultados de Liguilla
+──────────────────────────────────────────
+(En desarrollo: UI para registrar resultados)
+- Grabar goles en cada partido
+- Agregar goleadores si lo deseas
+- Tab 📋 Liguilla se actualiza automáticamente
+
+PASO 4: Generar Playoff
+───────────────────────
+Tab: 🔥 Playoff
+1. Click [🎲 Generar Playoff Automático]
+   - Toma posiciones 9-24 de Liguilla
+   - Crea emparejamientos automáticos (9vs24, 10vs23, etc.)
+   - Genera partidos IDA Y VUELTA
+2. ✓ Aparecen en tab 🔥 Playoff
+
+PASO 5: Registrar Resultados Playoff
+─────────────────────────────────────
+(En desarrollo)
+- Registrar resultado IDA
+- Registrar resultado VUELTA
+- Calcular ganador por agregado (goles totales)
+- Penaltis si es necesario
+
+PASO 6: Crear Eliminatorias
+────────────────────────────
+(En desarrollo)
+- Click [🎲 Generar Octavos Automático]
+  - Toma 8 primeros de Liguilla
+  - Toma 8 ganadores de Playoff
+  - Crea emparejamientos: 1vs8 de Liguilla vs ganador más bajo Playoff, etc.
+
+PASO 7: Registrar Eliminatorias
+───────────────────────────────
+Tab: 🏆 Eliminatorias
+- Selector: [Octavos] [Cuartos] [Semifinal] [Final]
+- Registrar resultados IDA Y VUELTA
+- Calcular ganadores
+- Automáticamente pasan a siguiente fase
+
+════════════════════════════════════════════════════════════════════════════════
+CRITERIOS DE DESEMPATE (LIGUILLA)
+════════════════════════════════════════════════════════════════════════════════
+
+En caso de empate a puntos entre equipos:
+
+1. Diferencia de goles (goles a favor - goles en contra)
+2. Goles a favor
+3. (FIFA 2026): Puntos en enfrentamiento directo
+4. (FIFA 2026): Diferencia goles en H2H
+5. (FIFA 2026): Fair Play (tarjetas)
+6. (FIFA 2026): Ranking FIFA
+
+Nota: La app actualmente implementa (1) y (2). Los criterios FIFA 2026 completos
+se implementarán en la próxima versión.
+
+════════════════════════════════════════════════════════════════════════════════
+CÁLCULO DE GANADOR EN PLAYOFF/ELIMINATORIAS
+════════════════════════════════════════════════════════════════════════════════
+
+Ejemplo: Octavos de Final - Ida y Vuelta
+
+IDA (en campo de Equipo A):        A 2 - 1 B
+VUELTA (en campo de Equipo B):     B 1 - 2 A
+
+AGREGADO: A 4 - 2 B → A gana
+
+Si hay empate en agregado:
+1. Goles de visitante (quien marcó más fuera)
+2. Prórroga
+3. Penaltis (si no se resuelve en prórroga)
+
+════════════════════════════════════════════════════════════════════════════════
+PRÓXIMAS IMPLEMENTACIONES
+════════════════════════════════════════════════════════════════════════════════
+
+⏳ Generador de Liguilla (8 jornadas automáticas)
+⏳ Generador de Playoff (emparejamientos automáticos 9-24)
+⏳ Generador de Octavos (cruzamiento automático)
+⏳ UI para registrar resultados de Playoff/Eliminatorias
+⏳ Cálculo automático de ganadores
+⏳ Criterios de desempate FIFA 2026 completos
+⏳ Botón "Cambiar Torneo" para volver al selector
+
+════════════════════════════════════════════════════════════════════════════════
+DATOS NECESARIOS
+════════════════════════════════════════════════════════════════════════════════
+
+Para que funcione correctamente:
+
+✓ 36 equipos importados (con sus jugadores)
+✓ 8 × 4 = 32 partidos mínimo de Liguilla
+  (Mejor: 36 equipos × 8 partidos = 288 partidos)
+✓ Resultados de Liguilla grabados
+✓ (Opcional) Goleadores por partido
+
+════════════════════════════════════════════════════════════════════════════════
+EJEMPLO: ESTRUCTURA DE DATOS
+════════════════════════════════════════════════════════════════════════════════
+
+Base de datos (champions_gui_v2.db):
+
+Tabla EQUIPOS (36 registros)
+├─ Real Madrid
+├─ Barcelona
+├─ Bayern Munich
+├─ PSG
+├─ ... (32 más)
+└─ (Total: 36)
+
+Tabla PARTIDOS (288 registros en Liguilla, 16 en Playoff, etc.)
+├─ Real Madrid vs Bayern (Liguilla) → fase="Liguilla", grupo="Liguilla"
+├─ PSG vs Barcelona (Liguilla)
+├─ Real Madrid vs Bayern (Playoff IDA) → fase="Playoff", jornada="IDA"
+├─ Bayern vs Real Madrid (Playoff VUELTA) → fase="Playoff", jornada="VUELTA"
+├─ Real Madrid vs PSG (Octavos IDA) → fase="Octavos", jornada="IDA"
+└─ ... (más partidos)
+
+Tabla GOLEADORES_PARTIDO (opcional)
+├─ Ronaldo: 2 goles en Real Madrid vs Bayern
+├─ Haaland: 1 gol en Bayern vs Real Madrid
+└─ ...
+
+════════════════════════════════════════════════════════════════════════════════

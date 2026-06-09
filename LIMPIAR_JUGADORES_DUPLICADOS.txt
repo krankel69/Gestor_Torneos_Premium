@@ -1,0 +1,103 @@
+════════════════════════════════════════════════════════════════════════════════
+  🧹 LIMPIAR JUGADORES DUPLICADOS
+════════════════════════════════════════════════════════════════════════════════
+
+PROBLEMA
+════════════════════════════════════════════════════════════════════════════════
+
+Al importar jugadores, quedaron triplicados:
+· Aaron Hockey (Escocia) × 3
+· Aaron Wan-Bissaka (RD Congo) × 3
+· etc.
+
+Y el botón "Eliminar Jugador" funciona lentamente o no borra todos.
+
+════════════════════════════════════════════════════════════════════════════════
+SOLUCIÓN
+════════════════════════════════════════════════════════════════════════════════
+
+En tab **"Equipos y Jugadores"** → sub-tab **"Jugadores"**
+
+Verás DOS botones nuevos:
+
+✅ **Botón 1: "🧹 Limpiar Duplicados"**
+   ├─ Busca jugadores duplicados (mismo nombre + equipo)
+   ├─ Mantiene UNO de cada duplicado
+   ├─ Borra el resto
+   └─ Rápido y seguro (no pierdes datos, solo reduces duplicados)
+
+✅ **Botón 2: "⚠️ Borrar TODOS los Jugadores"**
+   ├─ Borra TODOS los jugadores de golpe
+   ├─ Requiere doble confirmación
+   ├─ Irreversible (cuidado)
+   └─ Útil si quieres empezar de cero
+
+════════════════════════════════════════════════════════════════════════════════
+CÓMO USAR
+════════════════════════════════════════════════════════════════════════════════
+
+OPCIÓN A: Limpiar duplicados (RECOMENDADO)
+───────────────────────────────────────────
+
+1. Tab "Equipos y Jugadores" → "Jugadores"
+2. Click en "🧹 Limpiar Duplicados"
+3. Confirma cuando pida confirmación
+4. Espera a que termine (unos segundos)
+5. ✓ Verás mensaje: "Se eliminaron X jugadores duplicados"
+
+Resultado: Cada jugador aparece una sola vez.
+
+OPCIÓN B: Borrar todo y empezar de cero
+───────────────────────────────────────
+
+1. Tab "Equipos y Jugadores" → "Jugadores"
+2. Click en "⚠️ Borrar TODOS los Jugadores"
+3. Primera confirmación: "¿Estás seguro?"
+4. Segunda confirmación: "¿ESTÁS SEGURO? (irreversible)"
+5. Click OK en ambas
+6. ✓ Se borran todos los jugadores
+7. Vuelves a importar de la carpeta CSV (ahora sin duplicados)
+
+════════════════════════════════════════════════════════════════════════════════
+RECOMENDACIÓN
+════════════════════════════════════════════════════════════════════════════════
+
+Usa "🧹 Limpiar Duplicados" PRIMERO.
+
+Si eso no funciona o hay demasiados problemas:
+1. Usa "⚠️ Borrar TODOS"
+2. Re-importa desde la carpeta CSV (sin duplicar archivos)
+3. Luego crea los partidos
+
+════════════════════════════════════════════════════════════════════════════════
+QUÉ PASA DESPUÉS
+════════════════════════════════════════════════════════════════════════════════
+
+Una vez limpios los jugadores:
+1. Tab "Equipos y Jugadores" → "Equipos" → Ver tabla de posiciones
+   (debe mostrar los 36 equipos)
+2. Crear partidos para la Liga Regular (8 jornadas, 144 partidos)
+3. Grabar resultados y goleadores
+
+════════════════════════════════════════════════════════════════════════════════
+SI SIGUE SIN FUNCIONAR
+════════════════════════════════════════════════════════════════════════════════
+
+Alternativa: Editar base de datos directamente
+(abrir con SQLite Browser)
+
+Comando SQL para borrar jugadores duplicados:
+```sql
+DELETE FROM jugadores 
+WHERE id NOT IN (
+  SELECT MIN(id) FROM jugadores 
+  GROUP BY nombre, equipo_id
+);
+```
+
+O borrar todos:
+```sql
+DELETE FROM jugadores;
+```
+
+════════════════════════════════════════════════════════════════════════════════

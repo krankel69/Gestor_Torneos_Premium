@@ -1,0 +1,172 @@
+════════════════════════════════════════════════════════════════════════════════
+  🔧 FIXES APLICADOS — DATABASE LOCKING Y SCHEMA
+════════════════════════════════════════════════════════════════════════════════
+
+PROBLEMAS IDENTIFICADOS
+════════════════════════════════════════════════════════════════════════════════
+
+❌ ERROR 1: "no such column: grupo"
+   Causa: El código intentaba usar `partidos.grupo` pero la columna no existía
+
+❌ ERROR 2: "database is locked"
+   Causa principal: Múltiples conexiones SQLite simultáneas sin cierre correcto
+   → `_conn()` abría nuevas conexiones sin `check_same_thread=False`
+   → Modo Journal por defecto (DELETE) vs WAL más eficiente
+   → `try-except` incompletos dejaban conexiones abiertas
+
+════════════════════════════════════════════════════════════════════════════════
+SOLUCIONES IMPLEMENTADAS
+════════════════════════════════════════════════════════════════════════════════
+
+✅ FIX 1: AGREGAR COLUMNA `grupo` AL SCHEMA
+   - En AppMaestra.__init__: verifica y crea `partidos.grupo` si no existe
+   - Soporte retroactivo: funciona con BDs existentes
+
+✅ FIX 2: OPTIMIZAR CONEXIONES SQLITE
+   Función `_conn()` actualizada:
+   ───────────────────────────────────
+   def _conn(db_path):
+       c = sqlite3.connect(
+           db_path,
+           timeout=10.0,              ← Espera 10s si está locked
+           check_same_thread=False    ← Permite múltiples threads
+       )
+       c.row_factory = sqlite3.Row
+       c.execute("PRAGMA foreign_keys = ON")
+       c.execute("PRAGMA journal_mode = WAL")  ← Más eficiente
+       return c
+
+✅ FIX 3: MANEJO SEGURO DE CONEXIONES EN MÉTODOS
+   Patrón: try-except-finally para garantizar cierre
+   ───────────────────────────────────────────────
+   conn = None
+   try:
+       conn = _conn(db_path)
+       # ... operaciones ...
+       conn.commit()
+   except Exception as e:
+       messagebox.showerror("Error", str(e))
+   finally:
+       if conn:
+           try:
+               conn.close()
+           except:
+               pass
+
+✅ FIX 4: REESCRIBIR `_recalcular_grupos`
+   - Detecta si columna `grupo` existe
+   - Fallback silencioso si no existe (compatibilidad)
+   - Try-finally para cerrar conexión
+   - Manejo de excepciones para H2H (opcional)
+
+✅ FIX 5: REESCRIBIR `_grabar_gol_mundial`
+   - Try-finally garantiza cierre de conexión
+   - No hay `conn.close()` intermedio (causa deadlock)
+   - Un único cierre al final
+
+✅ FIX 6: ACTUALIZAR TODAS LAS CONEXIONES SQLITE
+   - Línea ~237 (schema init en __init__)
+   - Línea ~2281 (main, creación BD antigua)
+   Todas con: timeout=10.0, check_same_thread=False, WAL mode
+
+════════════════════════════════════════════════════════════════════════════════
+EXPLICACIÓN TÉCNICA
+════════════════════════════════════════════════════════════════════════════════
+
+¿Por qué SQLite se bloquea?
+
+SQLite es single-writer. Cuando abrimos múltiples conexiones:
+
+ANTES (❌ deadlock):
+    Thread 1: _conn() abre conexión → INSERT → sin commit inmediato
+    Thread 2: _conn() abre otra conexión → espera escribir → LOCKED
+    Thread 1: aún no liberó su lock
+
+DESPUÉS (✅ evitado):
+    timeout=10.0 → Espera 10s en vez de fallar inmediatamente
+    check_same_thread=False → Permite threads en la misma conexión
+    WAL mode → Write-Ahead Logging permite lectura mientras se escribe
+    try-finally → Garantiza commit() y close()
+
+════════════════════════════════════════════════════════════════════════════════
+CÓMO PROBAR
+════════════════════════════════════════════════════════════════════════════════
+
+1. Copiar app_maestra_futbol.py a tu carpeta
+2. Abrir la app (debe crear/actualizar schema sin errores)
+3. Crear grupo mundial (si es nuevo)
+4. Agregar partidos con fase="Fase de grupos" y grupo="A"/"B"/ etc.
+5. Registrar resultado → debe funcionar sin "database is locked"
+6. Agregar goleadores → debe funcionar sin locks
+
+════════════════════════════════════════════════════════════════════════════════
+SI AÚNTEN PROBLEMAS
+════════════════════════════════════════════════════════════════════════════════
+
+Si sigue con "database is locked":
+
+1. **Cierra todos los procesos Python** que accedan a la BD
+   Cmd: taskkill /IM python.exe
+
+2. **Elimina archivo .db-wal** (Write-Ahead Log)
+   En la carpeta de bases_de_datos/ → elimina *.db-wal
+
+3. **Aumenta timeout en _conn():**
+   timeout=30.0  (vs 10.0 actual)
+
+4. **Última opción: usar ROLLBACK en finally:**
+   ```
+   finally:
+       if conn:
+           try:
+               conn.rollback()  # Revertir si no commited
+               conn.close()
+           except:
+               pass
+   ```
+
+════════════════════════════════════════════════════════════════════════════════
+ARQUITECTURA POST-FIXES
+════════════════════════════════════════════════════════════════════════════════
+
+┌─ App ─────────────────────────────────┐
+│ AppMaestra (UI Thread)                │
+│  └─ self.db (GestorBaseDeDatos)      │
+│      └─ conn permanente (si)         │
+│  └─ _conn() → nueva conn cada vez   │
+│      (ahora: timeout + WAL + FKs)    │
+└───────────────────────────────────────┘
+        ↓ INSERT, UPDATE, DELETE
+┌─ SQLite ──────────────────────────────┐
+│ journal_mode = WAL (más concurrente) │
+│ timeout = 10s (espera, no falla)     │
+│ check_same_thread = False (multi)    │
+└───────────────────────────────────────┘
+
+════════════════════════════════════════════════════════════════════════════════
+CAMBIOS EXACTOS EN CÓDIGO
+════════════════════════════════════════════════════════════════════════════════
+
+Línea ~157-162:
+   def _conn(db_path):
+   -   c = sqlite3.connect(db_path)
+   +   c = sqlite3.connect(db_path, timeout=10.0, check_same_thread=False)
+   +   c.execute("PRAGMA journal_mode = WAL")
+
+Línea ~235-250 (AppMaestra.__init__):
+   conn = sqlite3.connect(db_path, timeout=10.0, check_same_thread=False)
+   conn.execute("PRAGMA journal_mode = WAL")
+   + if "grupo" not in p_cols:
+   +     conn.execute("ALTER TABLE partidos ADD COLUMN grupo TEXT DEFAULT NULL")
+
+Línea ~1400-1450 (_recalcular_grupos):
+   - Reescrita completa con try-except-finally
+   - Detecta grupo opcionalmente
+   - Cierre garantizado
+
+Línea ~1650-1704 (_grabar_gol_mundial):
+   - Reescrita con try-except-finally
+   - Sin `conn.close()` intermedios
+   - Un cierre único al final
+
+════════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,161 @@
+════════════════════════════════════════════════════════════════════════════════
+  🏆 NUEVO DASHBOARD PRINCIPAL — SELECCIÓN DE TORNEOS
+════════════════════════════════════════════════════════════════════════════════
+
+FLUJO NUEVO
+════════════════════════════════════════════════════════════════════════════════
+
+Ahora la app tiene dos niveles:
+
+NIVEL 1: DASHBOARD PRINCIPAL (Pantalla de Bienvenida)
+   ↓
+   Selector de Torneos
+   ├─ ⚽ LIGA
+   ├─ 🏅 CHAMPIONS LEAGUE
+   ├─ 🌍 MUNDIAL 2026
+   └─ 🇪🇺 EUROCOPA 2024
+
+NIVEL 2: DASHBOARD ESPECÍFICO DEL TORNEO
+   ├─ Liga: Jornadas (1-38)
+   ├─ Champions: Liguilla → Playoff → Octavos → ...
+   ├─ Mundial: Grupos (A-L) → Dieciseisavos → Octavos → ...
+   └─ Eurocopa: Grupos (A-D) → Octavos → ...
+
+════════════════════════════════════════════════════════════════════════════════
+DASHBOARD PRINCIPAL
+════════════════════════════════════════════════════════════════════════════════
+
+Al iniciar la app, verás:
+
+┌─────────────────────────────────────────────────────────┐
+│                                                         │
+│       🏆 GESTOR PREMIUM DE TORNEOS 2026                │
+│                                                         │
+│   Selecciona el torneo que deseas gestionar             │
+│                                                         │
+│  ┌──────────────────────┬──────────────────────┐       │
+│  │ ⚽ LIGA               │ 🏅 CHAMPIONS LEAGUE │       │
+│  │                      │                      │       │
+│  │ 📊 Equipos: 20       │ 📊 Equipos: 36     │       │
+│  │ 📅 Partidos: 380     │ 📅 Partidos: 0     │       │
+│  │ ✓ Listo para usar    │ ⚙️ Acción: Importar│       │
+│  │                      │                      │       │
+│  │ [Abrir Liga]         │ [Abrir Champions]   │       │
+│  │                      │                      │       │
+│  ├──────────────────────┼──────────────────────┤       │
+│  │ 🌍 MUNDIAL 2026      │ 🇪🇺 EUROCOPA 2024  │       │
+│  │                      │                      │       │
+│  │ 📊 Equipos: 48       │ 📊 Equipos: 24     │       │
+│  │ 📅 Partidos: 64      │ 📅 Partidos: 36    │       │
+│  │ ✓ Listo para usar    │ ✓ Listo para usar  │       │
+│  │                      │                      │       │
+│  │ [Abrir Mundial]      │ [Abrir Eurocopa]   │       │
+│  │                      │                      │       │
+│  └──────────────────────┴──────────────────────┘       │
+│                                                         │
+│  v2.0 - 2026 | Sistema flexible para múltiples torneos │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+INFORMACIÓN POR TORNEO:
+
+Cada torneo muestra:
+- 📊 Número de equipos actuales
+- 📅 Número de partidos creados
+- ✓ Estado: Listo / ⚙️ Necesita acción
+
+CÓMO USAR:
+
+1. Click en el botón del torneo que quieres gestionar
+2. ↓ Se carga el dashboard específico de ese torneo
+3. Allí puedes:
+   · Ver la clasificación (tabla única o grupos)
+   · Crear/importar equipos y jugadores
+   · Registrar resultados y goleadores
+   · Navegar entre fases (Grupos → Eliminatorias, etc.)
+
+════════════════════════════════════════════════════════════════════════════════
+ESTRUCTURAS POR TORNEO
+════════════════════════════════════════════════════════════════════════════════
+
+⚽ LIGA
+───────
+Estructura: Jornadas (1-38)
+- Selector: [Jornada 1] [Jornada 2] ... [Jornada 38]
+- Vista: Partidos y posiciones de esa jornada
+- Clasificación: Acumulativa (todos los partidos de todas las jornadas)
+
+🏅 CHAMPIONS LEAGUE (NUEVO FORMATO)
+──────────────────────────────────
+Estructura: Liguilla → Playoff → Eliminatorias
+- Fase 1 (Liguilla): 36 equipos en 1 tabla única
+  - 8 primeros: Octavos directo
+  - 9-24: Playoff (ida y vuelta)
+  - 25-36: Eliminados
+- Fase 2 (Playoff): 16 equipos → 8 ganadores
+- Fase 3 (Eliminatorias): Octavos, Cuartos, Semis, Final
+
+Selector: [Liguilla] [Playoff] [Octavos] [Cuartos] [Semis] [Final]
+
+🌍 MUNDIAL 2026
+──────────────
+Estructura: Grupos → Dieciseisavos → Eliminatorias
+- Fase 1 (Grupos): 12 grupos (A-L), 4 equipos cada uno
+  - 1-2 de cada grupo: 24 clasificados
+  - 8 mejores terceros: 8 clasificados
+  - Total: 32 a dieciseisavos
+- Fase 2 (Dieciseisavos): 32 → 16
+- Fase 3 (Eliminatorias): Octavos, Cuartos, Semis, Final
+
+Selector: [A] [B] [C] [D] [E] [F] [G] [H] [I] [J] [K] [L]
+
+🇪🇺 EUROCOPA 2024
+─────────────────
+Estructura: Grupos → Fases Eliminatorias
+- Fase 1 (Grupos): 4 grupos (A-D), 6 equipos cada uno
+  - 1-2 de cada grupo: 8 clasificados
+  - 4 mejores terceros: 4 clasificados
+  - Total: 16 a octavos
+- Fase 2 (Eliminatorias): Octavos, Cuartos, Semis, Final
+
+Selector: [A] [B] [C] [D]
+
+════════════════════════════════════════════════════════════════════════════════
+BASES DE DATOS AUTOMÁTICAS
+════════════════════════════════════════════════════════════════════════════════
+
+La app crea automáticamente archivos de base de datos:
+
+📁 Carpeta: D:\Manu\Documentos\FUTBOL\Gestor_Torneos_Premium\bases_de_datos\
+
+Archivos:
+├─ liga_futbol_v2.db        (⚽ LIGA)
+├─ champions_gui_v2.db      (🏅 CHAMPIONS)
+├─ mundial_2026_v2.db       (🌍 MUNDIAL)
+└─ eurocopa_2024_v2.db      (🇪🇺 EUROCOPA)
+
+Si un archivo no existe, se crea automáticamente cuando lo intentas abrir.
+
+════════════════════════════════════════════════════════════════════════════════
+CAMBIAR DE TORNEO DURANTE LA SESIÓN
+════════════════════════════════════════════════════════════════════════════════
+
+⚠️ PRÓXIMA MEJORA:
+
+Pronto se agregará un botón "Cambiar Torneo" en la barra superior de cada
+dashboard que te permita volver al selector principal sin cerrar la app.
+
+Por ahora: Cierra la app (botón X o ✖ Salir) y vuelve a iniciarla.
+
+════════════════════════════════════════════════════════════════════════════════
+VENTAJAS DE ESTA ESTRUCTURA
+════════════════════════════════════════════════════════════════════════════════
+
+✅ Interfaz clara y profesional
+✅ Fácil cambio entre torneos
+✅ Cada torneo con su estructura específica (no fuerza formatos iguales)
+✅ Posibilidad de gestionar múltiples torneos simultáneamente (en BDs separadas)
+✅ Escalable: Se pueden agregar más torneos sin problemas
+✅ Información del estado de cada torneo visible de un vistazo
+
+════════════════════════════════════════════════════════════════════════════════

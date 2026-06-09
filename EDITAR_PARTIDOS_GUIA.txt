@@ -1,0 +1,143 @@
+════════════════════════════════════════════════════════════════════════════════
+  📝 GUÍA — EDITAR PARTIDOS Y GOLEADORES DESPUÉS DE GRABAR RESULTADO
+════════════════════════════════════════════════════════════════════════════════
+
+EL PROBLEMA ANTERIOR
+════════════════════════════════════════════════════════════════════════════════
+
+❌ Una vez que grababas los goles de un partido, desaparecía del combo
+   → No podías seguir editando ni agregar goleadores
+   → Tenías que editar la BD manualmente
+
+════════════════════════════════════════════════════════════════════════════════
+LOS CAMBIOS REALIZADOS
+════════════════════════════════════════════════════════════════════════════════
+
+✅ CAMBIO 1: El combo "Selecciona un partido" ahora muestra TODOS
+   ANTES: Solo partidos sin resultado (– – ...)
+   AHORA: Todos los partidos, incluyendo jugados [1–1], [2–0], etc.
+   
+   Así puedes:
+   · Editar el marcador de un partido ya jugado
+   · Agregar/editar goleadores sin que desaparezca
+   · Ver claramente cuál es el resultado actual
+
+✅ CAMBIO 2: Pre-llenado automático de campos
+   Cuando seleccionas un partido del combo:
+   · Se rellenan los goles actuales (si están grabados)
+   · Se rellenan las tarjetas (si las grabaste)
+   · Solo necesitas cambiar lo que quieras editar
+
+════════════════════════════════════════════════════════════════════════════════
+FLUJO DE TRABAJO CORRECTO
+════════════════════════════════════════════════════════════════════════════════
+
+ESCENARIO: Necesitas agregar goleadores a un partido que ya tiene resultado
+
+1️⃣  Tab "Grupos y Resultados" → Panel "Resultado L / V:"
+    ├─ Combo "Partido:" → ver lista (ahora con [resultados])
+    └─ Selecciona tu partido → se pre-llenan goles y tarjetas
+
+2️⃣  Panel "Goleador:"
+    ├─ Combo equipo → auto-relleno con los equipos del partido
+    ├─ Selecciona jugador
+    ├─ Spinbox "Goles:" → cantidad de goles
+    └─ Click "⚽ Añadir Goleador"
+
+3️⃣  Panel "Calendario y Resultados"
+    └─ Doble-clic en fila del partido → Ventana con goleadores registrados
+       (alternativa: Ver en tabla "Máximos Goleadores")
+
+4️⃣  Una vez que cuadren los goles
+    └─ El partido mantiene su resultado, visible siempre
+
+════════════════════════════════════════════════════════════════════════════════
+FLUJO ALTERNATIVO: EDITAR GOLES YA GRABADOS
+════════════════════════════════════════════════════════════════════════════════
+
+Ejemplo: Grabaste 1–0, pero era 2–1
+
+1. Combo "Partido:" → busca el partido en la lista
+   Verás: "2 - España vs Francia (Fase de grupos) [1–0]"
+   
+2. Selecciona → se pre-llenan: GL=1, GV=0
+
+3. Cambia a: GL=2, GV=1
+
+4. Click "Grabar Resultado"
+   → Se actualiza marcador sin borrar goleadores previos
+   → Si habías asignado 1 gol, la validación te avisa si bajaste
+
+════════════════════════════════════════════════════════════════════════════════
+VALIDACIONES Y SEGURIDAD
+════════════════════════════════════════════════════════════════════════════════
+
+⚠️  No puedes bajar goles si hay goleadores asignados
+    Ejemplo: Grabaste 2–0 con dos goles de Mbappé
+    Si intentas cambiar a 1–0:
+    → ERROR: "Ya hay 2 goles locales registrados"
+    → Solución: Edita primero los goleadores, luego los goles
+
+✅ Puedes aumentar goles siempre
+    Ejemplo: 1–0 → 2–1
+    → Funciona, pero te avisa: "Faltan 1 gol(es) local y 1 visitante"
+
+✅ Puedes eliminar goles completamente
+    Si dejas campos vacíos → Borra el resultado (marca como –)
+
+════════════════════════════════════════════════════════════════════════════════
+CÓDIGO DE LOS CAMBIOS
+════════════════════════════════════════════════════════════════════════════════
+
+Función: _cargar_partidos_mundiales (línea ~1519)
+   ANTES:
+      if res == "–":
+          opciones.append(f"{id} - {partido} ({fase})")
+
+   DESPUÉS:
+      opciones.append(f"{id} - {partido} ({fase}) [{res}]")
+      # Muestra TODOS, y el resultado en []
+
+Función: _on_seleccion_partido_mundial (línea ~1538)
+   NUEVO: Pre-llena campos de goles y tarjetas
+   ```
+   if p["goles_local"] != -1:
+       self.entry_mundial_gl.insert(0, str(p["goles_local"]))
+   ```
+
+════════════════════════════════════════════════════════════════════════════════
+FAQ
+════════════════════════════════════════════════════════════════════════════════
+
+P: ¿Qué pasa si no asigno goleadores?
+R: El marcador se graba igual. La app te avisa "Faltan X goles por asignar".
+   Puedes seguir el partido y agregar goleadores después sin problema.
+
+P: ¿Puedo tener un partido con goles pero sin goleadores?
+R: SÍ. No es un error. Algunos usos:
+   · Importaste resultados de un CSV
+   · Quieres registrar goles primero y goleadores después
+   · Solo te interesa la clasificación, no los goleadores
+
+P: ¿Cómo veo todos los partidos de golpe?
+R: En el tab "Calendario y Resultados" → Tabla mostrará TODOS los partidos
+   (filtrados por fase si aplica). El combo es para seleccionar uno rápidamente.
+
+P: ¿Desaparece el partido si borro el resultado?
+R: NO. Sigue en la tabla, solo que marcado como "–" (sin jugar).
+   Aparece de nuevo en el combo para poder volver a grabarlo.
+
+════════════════════════════════════════════════════════════════════════════════
+CÓMO PROBAR
+════════════════════════════════════════════════════════════════════════════════
+
+1. Graba un partido con resultado (ej: 2–1)
+2. NO agregues goleadores
+3. El partido debe seguir visible en el combo con [2–1]
+4. Selecciónalo → se pre-llenan los goles
+5. Ahora puedes:
+   · Editar los goles
+   · Agregar goleadores
+   · Ver en la tabla que NO desapareció
+
+════════════════════════════════════════════════════════════════════════════════

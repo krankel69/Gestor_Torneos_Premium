@@ -1,0 +1,25 @@
+BACKUP v2.0.0 - 2026-06-09 23:46:45.518868
+================================================================================
+
+ARCHIVOS DE APLICACION:
+  [OK] app_maestra_futbol.py (163.3 KB)
+  [OK] database.py (24.4 KB)
+  [OK] ui_components.py (13.0 KB)
+
+BASES DE DATOS:
+  [OK] liga_futbol_v2.db (0.1 MB)
+  [OK] mundial_2026.db (0.1 MB)
+  [OK] mundial_2026.db (0.0 MB)
+  [OK] mundial_2026.db (0.1 MB)
+  [OK] mundial_2026_v2.db (0.1 MB)
+  [OK] mundial_2026_v2.db (0.2 MB)
+  [OK] eurocopa_2024_v2.db (0.0 MB)
+  [OK] champions_gui_v2.db (0.0 MB)
+  [OK] liga_futbol_v2.db (0.1 MB)
+  [OK] mundial_2026.db (0.1 MB)
+  [OK] champions_gui_v2.db (0.0 MB)
+
+PARAMETROS:
+  Fecha: 2026-06-09T23:46:45.520187
+  Ubicacion: D:\Manu\Documentos\FUTBOL\Gestor_Torneos_Premium\backups\v2.0.0
+  Compresion: .sql.gz
