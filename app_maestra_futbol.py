@@ -484,6 +484,12 @@ class AppMaestra(tk.Frame):
         else:
             tb.Label(frm_gol, text="Sin datos", font="-size 9", foreground="#999").pack(anchor=W)
 
+        # Botón de gráficos
+        frm_botones = tb.Frame(frm)
+        frm_botones.pack(fill=X, padx=10, pady=10)
+
+        tb.Button(frm_botones, text="📈 Ver Gráficos", bootstyle="primary", command=self._mostrar_graficos).pack(fill=X)
+
     def _ui_clasificacion(self, parent):
         frm_izq = tb.Frame(parent, padding=10, width=280)
         frm_izq.pack_propagate(False)
@@ -3132,6 +3138,28 @@ class AppMaestra(tk.Frame):
         except:
             pass
         self._root.destroy()
+
+    def _mostrar_graficos(self):
+        """Mostrar gráficos interactivos."""
+        try:
+            from src.charts import ChartWidget
+
+            clas = self.db.recalcular_y_obtener_clasificacion()
+
+            datos = {}
+            for eq in clas:
+                eq_dict = dict(eq) if hasattr(eq, "keys") else eq
+                nombre = eq_dict.get("nombre", "N/A")
+                gf = eq_dict.get("gf", 0)
+                datos[nombre] = gf
+
+            if datos:
+                chart = ChartWidget()
+                chart.plot_bars(datos, "Goles por Equipo")
+            else:
+                messagebox.showinfo("Info", "No hay datos")
+        except Exception as e:
+            messagebox.showerror("Error", f"Error: {e}")
 
 
 # ──────────────────────────────────────────────────────────
