@@ -1,0 +1,13 @@
+[build]
+  base = "web"
+  command = "npm run build"
+  publish = "web/build"
+
+[dev]
+  command = "npm start"
+  port = 3000
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
