@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 
 export default function App() {
-  const [equipos, setEquipos] = useState([]);
+  const [equipos, setEquipos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
