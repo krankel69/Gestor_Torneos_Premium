@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     setLoading(true);
-    const apiUrl = `http://${window.location.hostname}:8000/api/equipos?torneo=${selectedTorneo}`;
+    const apiUrl = ` https://gestor-torneos-premium-1.onrender.com/api/equipos?torneo=${selectedTorneo}`;
     fetch(apiUrl)
       .then(res => res.json())
       .then(data => {
