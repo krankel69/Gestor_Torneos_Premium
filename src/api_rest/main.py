@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from src.api_rest.routes.equipos import router as equipos_router
-from src.api_rest.routes.partidos import router as partidos_router
-from src.api_rest.routes.goleadores import router as goleadores_router
-from src.api_rest.routes.clasificacion import router as clasificacion_router
+from .routes.equipos import router as equipos_router
+from .routes.partidos import router as partidos_router
+from .routes.goleadores import router as goleadores_router
+from .routes.clasificacion import router as clasificacion_router
 
 app = FastAPI(title="Gestor Premium de Torneos API", version="2.1.0")
 
