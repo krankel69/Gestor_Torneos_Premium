@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+env/
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Pytest
+.pytest_cache/
+.coverage
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Databases
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
+
+# Ambiente
+.env
+.env.local
+
+# Excepciones
+!backups/
+!docs/
+!tests/
