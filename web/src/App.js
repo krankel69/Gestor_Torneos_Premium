@@ -15,7 +15,8 @@ function App() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://127.0.0.1:8000/api/equipos?torneo=${selectedTorneo}`)
+    const apiUrl = `http://${window.location.hostname}:8000/api/equipos?torneo=${selectedTorneo}`;
+    fetch(apiUrl)
       .then(res => res.json())
       .then(data => {
         setEquipos(data);
