@@ -95,3 +95,20 @@ async def update_equipo(equipo_id: int, equipo: dict):
 @router.delete("/{equipo_id}", response_model=dict)
 async def delete_equipo(equipo_id: int):
     return {"status": "pending", "message": "Delete no implementado"}
+
+
+from firebase_admin import firestore
+from fastapi import HTTPException
+
+
+@router.post("", response_model=dict, status_code=201)
+async def create_equipo(equipo: EquipoCreate):
+    """Crear nuevo equipo"""
+    try:
+        if not equipo.nombre or len(equipo.nombre.strip()) == 0:
+            raise HTTPException(status_code=400, detail="Nombre requerido")
+        db = get_db()
+        resultado = db.agregar_equipo(equipo.nombre, equipo.ciudad or "")
+        return {"status": "success", "message": f"Equipo '{equipo.nombre}' creado", "equipo": equipo.nombre}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
