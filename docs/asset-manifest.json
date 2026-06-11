@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Gestor_Torneos_Premium/static/css/main.e6c13ad2.css",
-    "main.js": "/Gestor_Torneos_Premium/static/js/main.e8cf17b4.js",
+    "main.js": "/Gestor_Torneos_Premium/static/js/main.7fdc1ebc.js",
     "static/js/453.9d77d8c1.chunk.js": "/Gestor_Torneos_Premium/static/js/453.9d77d8c1.chunk.js",
     "index.html": "/Gestor_Torneos_Premium/index.html",
     "main.e6c13ad2.css.map": "/Gestor_Torneos_Premium/static/css/main.e6c13ad2.css.map",
-    "main.e8cf17b4.js.map": "/Gestor_Torneos_Premium/static/js/main.e8cf17b4.js.map",
+    "main.7fdc1ebc.js.map": "/Gestor_Torneos_Premium/static/js/main.7fdc1ebc.js.map",
     "453.9d77d8c1.chunk.js.map": "/Gestor_Torneos_Premium/static/js/453.9d77d8c1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.e8cf17b4.js"
+    "static/js/main.7fdc1ebc.js"
   ]
 }
