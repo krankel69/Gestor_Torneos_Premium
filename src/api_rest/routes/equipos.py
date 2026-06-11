@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 import sys
 from pathlib import Path
+import sqlite3
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 from database import GestorBaseDeDatos
@@ -36,6 +37,12 @@ def get_db(torneo: str = "liga"):
     torneos_bd = {"liga": "bases_de_datos/liga_futbol_v2.db", "mundial": "bases_de_datos/mundial_2026_v2.db", "champions": "bases_de_datos/champions_gui_v2.db", "euro": "bases_de_datos/eurocopa_2024_v2.db"}
     db_path = torneos_bd.get(torneo, torneos_bd["liga"])
     return GestorBaseDeDatos(db_path)
+
+
+def get_db_path(torneo: str = "liga"):
+    """Retorna la ruta del archivo de base de datos"""
+    torneos_bd = {"liga": "bases_de_datos/liga_futbol_v2.db", "mundial": "bases_de_datos/mundial_2026_v2.db", "champions": "bases_de_datos/champions_gui_v2.db", "euro": "bases_de_datos/eurocopa_2024_v2.db"}
+    return torneos_bd.get(torneo, torneos_bd["liga"])
 
 
 @router.get("", response_model=List[EquipoResponse])
@@ -89,26 +96,45 @@ async def create_equipo(equipo: EquipoCreate):
 
 @router.put("/{equipo_id}", response_model=dict)
 async def update_equipo(equipo_id: int, equipo: dict):
-    return {"status": "pending", "message": "Update no implementado"}
+    try:
+        db = get_db()
+        resultado = db.actualizar_equipo(equipo_id, equipo)
+        if resultado:
+            return {"status": "success", "message": f"Equipo actualizado"}
+        else:
+            raise HTTPException(status_code=404, detail="Equipo no encontrado")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
 
 @router.delete("/{equipo_id}", response_model=dict)
-async def delete_equipo(equipo_id: int):
-    return {"status": "pending", "message": "Delete no implementado"}
-
-
-from firebase_admin import firestore
-from fastapi import HTTPException
-
-
-@router.post("", response_model=dict, status_code=201)
-async def create_equipo(equipo: EquipoCreate):
-    """Crear nuevo equipo"""
+async def delete_equipo(equipo_id: int, torneo: str = "liga"):
+    """Elimina un equipo de la base de datos"""
     try:
-        if not equipo.nombre or len(equipo.nombre.strip()) == 0:
-            raise HTTPException(status_code=400, detail="Nombre requerido")
-        db = get_db()
-        resultado = db.agregar_equipo(equipo.nombre, equipo.ciudad or "")
-        return {"status": "success", "message": f"Equipo '{equipo.nombre}' creado", "equipo": equipo.nombre}
+        db_path = get_db_path(torneo)
+        
+        # Conectar a SQLite directamente
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        # Verificar que el equipo existe
+        cursor.execute("SELECT nombre FROM equipos WHERE id = ?", (equipo_id,))
+        equipo = cursor.fetchone()
+        
+        if not equipo:
+            conn.close()
+            raise HTTPException(status_code=404, detail=f"Equipo {equipo_id} no encontrado")
+        
+        # Eliminar el equipo
+        cursor.execute("DELETE FROM equipos WHERE id = ?", (equipo_id,))
+        conn.commit()
+        conn.close()
+        
+        return {"status": "success", "message": f"Equipo '{equipo[0]}' eliminado correctamente"}
+        
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error al eliminar: {str(e)}")
