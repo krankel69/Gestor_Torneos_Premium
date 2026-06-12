@@ -1,0 +1,14 @@
+Equipo Local,Equipo Visitante,Fecha,Fase,Jornada
+Ganador Octavos 1,Ganador Octavos 2,DD/MM/AAAA,Cuartos,Ida
+Ganador Octavos 2,Ganador Octavos 1,DD/MM/AAAA,Cuartos,Vuelta
+Ganador Octavos 3,Ganador Octavos 4,DD/MM/AAAA,Cuartos,Ida
+Ganador Octavos 4,Ganador Octavos 3,DD/MM/AAAA,Cuartos,Vuelta
+Ganador Octavos 5,Ganador Octavos 6,DD/MM/AAAA,Cuartos,Ida
+Ganador Octavos 6,Ganador Octavos 5,DD/MM/AAAA,Cuartos,Vuelta
+Ganador Octavos 7,Ganador Octavos 8,DD/MM/AAAA,Cuartos,Ida
+Ganador Octavos 8,Ganador Octavos 7,DD/MM/AAAA,Cuartos,Vuelta
+Ganador Cuartos 1,Ganador Cuartos 2,DD/MM/AAAA,Semifinal,Ida
+Ganador Cuartos 2,Ganador Cuartos 1,DD/MM/AAAA,Semifinal,Vuelta
+Ganador Cuartos 3,Ganador Cuartos 4,DD/MM/AAAA,Semifinal,Ida
+Ganador Cuartos 4,Ganador Cuartos 3,DD/MM/AAAA,Semifinal,Vuelta
+Finalista 1,Finalista 2,DD/MM/AAAA,Final,Único

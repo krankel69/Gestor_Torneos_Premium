@@ -1,0 +1,7 @@
+Iniciando Gestor Premium de Torneos — 2026-06-13 01:20:03.797056
+⏳ Sincronizando...
+✗ Error en mundial: No item with that key
+✓ CHAMPIONS: 0 equipos, 0 partidos
+✓ EURO: 1 equipos, 0 partidos
+✓ LIGA: 20 equipos, 0 partidos
+✓ Sincronización: 0 equipos, 0 partidos
