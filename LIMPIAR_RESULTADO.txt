@@ -1,0 +1,48 @@
+# PARCHE SIMPLE: Agregar botón "Limpiar Resultado" en Mondial
+#
+# PASO 1: Busca la línea 823 en app_maestra_futbol.py:
+#   tb.Button(frm_der, text="⚽ Añadir Goleador"...
+#
+# PASO 2: REEMPLAZA las 4 líneas de botones (823-825) con ESTO:
+
+        tb.Button(frm_der, text="✅ Grabar Marcador", bootstyle=SUCCESS, command=self._grabar_resultado_mundial).grid(row=9, column=0, columnspan=3, sticky="ew", pady=5)
+        tb.Button(frm_der, text="⚽ Añadir Goleador", bootstyle="info", command=self._grabar_gol_mundial).grid(row=10, column=0, columnspan=3, sticky="ew", pady=3)
+        tb.Button(frm_der, text="🗑 Limpiar Resultado", bootstyle="danger-outline", command=self._limpiar_resultado_mundial).grid(row=11, column=0, columnspan=3, sticky="ew", pady=3)
+        tb.Button(frm_der, text="🔄 Refrescar", bootstyle="info-outline", command=self._cargar_grupo_seleccionado).grid(row=12, column=0, columnspan=3, sticky="ew", pady=3)
+        tb.Button(frm_der, text="🖨 Generar Acta PDF", bootstyle="warning-outline", command=self._on_generar_acta_pdf_mundial).grid(row=13, column=0, columnspan=3, sticky="ew", pady=3)
+
+# PASO 3: Busca la función _grabar_gol_mundial y ANTES de ella, agrega ESTA FUNCIÓN:
+
+    def _limpiar_resultado_mundial(self):
+        """Elimina el resultado y goleadores de un partido en Mondial."""
+        txt = self.combo_partido_mundial.get()
+        if not txt:
+            messagebox.showwarning("Aviso", "Selecciona un partido primero.")
+            return
+        try:
+            pid = int(txt.split(" - ")[0])
+        except:
+            messagebox.showerror("Error", "Partido inválido.")
+            return
+
+        if not messagebox.askyesno("Confirmar", "¿Eliminar resultado y goleadores de este partido?\n\nNo se puede deshacer."):
+            return
+
+        conn = _conn(self.db_path)
+        # Limpiar goleadores
+        conn.execute("DELETE FROM goleadores_partido WHERE partido_id=?", (pid,))
+        # Limpiar resultado (volver a -1 = sin jugar)
+        conn.execute("UPDATE partidos SET goles_local=-1, goles_visitante=-1, jugado=0 WHERE id=?", (pid,))
+        conn.commit()
+        conn.close()
+
+        messagebox.showinfo("Éxito", "Resultado y goleadores eliminados.")
+        self._cargar_grupo_seleccionado()
+
+# ───────────────────────────────────────────────────────────
+# También necesitas cambiar los números de row para los botones
+# que están DESPUÉS (Refrescar y PDF). Sube cada uno +1:
+#   Refrescar: row=11 → row=12
+#   PDF: row=12 → row=13
+# Y el LabelFrame de goleadores: row=13 → row=14
+# ───────────────────────────────────────────────────────────

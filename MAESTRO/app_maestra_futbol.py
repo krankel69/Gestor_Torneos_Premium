@@ -3410,11 +3410,10 @@ class AppMaestra(tk.Frame):
 
                 # Leer partidos
                 partidos = conn.execute("""
-                    SELECT p.id, p.fecha, el.nombre as local, ev.nombre as visitante,
+                   SELECT p.id, p.fecha,
+                        p.equipo_local_id, p.equipo_visitante_id,
                         p.goles_local, p.goles_visitante
                     FROM partidos p
-                    JOIN equipos el ON p.equipo_local_id = el.id
-                    JOIN equipos ev ON p.equipo_visitante_id = ev.id
                 """).fetchall()
 
                 import json

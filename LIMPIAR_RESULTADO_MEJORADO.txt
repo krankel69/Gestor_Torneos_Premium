@@ -1,0 +1,107 @@
+# FUNCIÓN MEJORADA: Limpiar Resultado + Actualizar Clasificación + Refrescar Goleadores
+#
+# REEMPLAZA la función _limpiar_resultado_mundial() con ESTA:
+
+    def _limpiar_resultado_mundial(self):
+        """Elimina resultado, goleadores Y actualiza clasificación."""
+        txt = self.combo_partido_mundial.get()
+        if not txt:
+            messagebox.showwarning("Aviso", "Selecciona un partido primero.")
+            return
+        try:
+            pid = int(txt.split(" - ")[0])
+        except:
+            messagebox.showerror("Error", "Partido inválido.")
+            return
+
+        if not messagebox.askyesno("Confirmar", "¿Eliminar resultado, goleadores y actualizar clasificación?\n\nNo se puede deshacer."):
+            return
+
+        conn = _conn(self.db_path)
+        
+        # 1. Obtener datos del partido ANTES de borrar (para revertir puntos)
+        partido = conn.execute(
+            "SELECT equipo_local_id, equipo_visitante_id, goles_local, goles_visitante FROM partidos WHERE id=?",
+            (pid,)
+        ).fetchone()
+        
+        if not partido:
+            conn.close()
+            return
+        
+        local_id = partido["equipo_local_id"]
+        visit_id = partido["equipo_visitante_id"]
+        gl = partido["goles_local"]
+        gv = partido["goles_visitante"]
+        
+        # 2. REVERTIR puntos en clasificación
+        if gl != -1 and gv != -1:  # Solo si el partido estaba registrado
+            # Obtener datos actuales
+            local = conn.execute("SELECT pj, pg, pe, pp, gf, gc, pts FROM equipos WHERE id=?", (local_id,)).fetchone()
+            visit = conn.execute("SELECT pj, pg, pe, pp, gf, gc, pts FROM equipos WHERE id=?", (visit_id,)).fetchone()
+            
+            # Revertir estadísticas
+            new_pj_l = max(0, local["pj"] - 1)
+            new_gf_l = max(0, local["gf"] - gl)
+            new_gc_l = max(0, local["gc"] - gv)
+            new_pts_l = local["pts"]
+            new_pg_l = local["pg"]
+            new_pe_l = local["pe"]
+            new_pp_l = local["pp"]
+            
+            new_pj_v = max(0, visit["pj"] - 1)
+            new_gf_v = max(0, visit["gf"] - gv)
+            new_gc_v = max(0, visit["gc"] - gl)
+            new_pts_v = visit["pts"]
+            new_pg_v = visit["pg"]
+            new_pe_v = visit["pe"]
+            new_pp_v = visit["pp"]
+            
+            # Revertir resultado del partido
+            if gl > gv:  # Local ganó
+                new_pts_l = max(0, new_pts_l - 3)
+                new_pg_l = max(0, new_pg_l - 1)
+                new_pp_v = max(0, new_pp_v - 1)
+            elif gv > gl:  # Visitante ganó
+                new_pts_v = max(0, new_pts_v - 3)
+                new_pg_v = max(0, new_pg_v - 1)
+                new_pp_l = max(0, new_pp_l - 1)
+            else:  # Empate
+                new_pts_l = max(0, new_pts_l - 1)
+                new_pts_v = max(0, new_pts_v - 1)
+                new_pe_l = max(0, new_pe_l - 1)
+                new_pe_v = max(0, new_pe_v - 1)
+            
+            # Actualizar equipos
+            conn.execute(
+                "UPDATE equipos SET pj=?, pg=?, pe=?, pp=?, gf=?, gc=?, pts=? WHERE id=?",
+                (new_pj_l, new_pg_l, new_pe_l, new_pp_l, new_gf_l, new_gc_l, new_pts_l, local_id)
+            )
+            conn.execute(
+                "UPDATE equipos SET pj=?, pg=?, pe=?, pp=?, gf=?, gc=?, pts=? WHERE id=?",
+                (new_pj_v, new_pg_v, new_pe_v, new_pp_v, new_gf_v, new_gc_v, new_pts_v, visit_id)
+            )
+        
+        # 3. ELIMINAR goleadores
+        conn.execute("DELETE FROM goleadores_partido WHERE partido_id=?", (pid,))
+        
+        # 4. LIMPIAR resultado
+        conn.execute("UPDATE partidos SET goles_local=-1, goles_visitante=-1, jugado=0 WHERE id=?", (pid,))
+        
+        conn.commit()
+        conn.close()
+
+        messagebox.showinfo("Éxito", "✓ Resultado eliminado\n✓ Goleadores eliminados\n✓ Clasificación actualizada")
+        
+        # 5. REFRESCAR todo
+        self._cargar_grupo_seleccionado()  # Actualiza tabla de partidos
+        self._actualizar_goleadores_mundial()  # Actualiza lista de goleadores
+
+# ───────────────────────────────────────────────────────────
+# ESTO VA EN LA LÍNEA 822-824 (botones):
+
+        tb.Button(frm_der, text="✅ Grabar Marcador", bootstyle=SUCCESS, command=self._grabar_resultado_mundial).grid(row=9, column=0, columnspan=3, sticky="ew", pady=5)
+        tb.Button(frm_der, text="⚽ Añadir Goleador", bootstyle="info", command=self._grabar_gol_mundial).grid(row=10, column=0, columnspan=3, sticky="ew", pady=3)
+        tb.Button(frm_der, text="🗑 Limpiar Resultado", bootstyle="danger-outline", command=self._limpiar_resultado_mundial).grid(row=11, column=0, columnspan=3, sticky="ew", pady=3)
+        tb.Button(frm_der, text="🔄 Refrescar", bootstyle="info-outline", command=self._cargar_grupo_seleccionado).grid(row=12, column=0, columnspan=3, sticky="ew", pady=3)
+        tb.Button(frm_der, text="🖨 Generar Acta PDF", bootstyle="warning-outline", command=self._on_generar_acta_pdf_mundial).grid(row=13, column=0, columnspan=3, sticky="ew", pady=3)
