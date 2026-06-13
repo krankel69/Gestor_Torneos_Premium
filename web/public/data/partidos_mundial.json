@@ -1,0 +1,506 @@
+[
+  {
+    "fecha": null,
+    "equipo_local_id": 1,
+    "equipo_visitante_id": 2,
+    "goles_local": 2,
+    "goles_visitante": 0
+  },
+  {
+    "fecha": "11/06/2026",
+    "equipo_local_id": 4,
+    "equipo_visitante_id": 3,
+    "goles_local": 1,
+    "goles_visitante": 2
+  },
+  {
+    "fecha": "12/06/2026",
+    "equipo_local_id": 5,
+    "equipo_visitante_id": 6,
+    "goles_local": 1,
+    "goles_visitante": 1
+  },
+  {
+    "fecha": "12/06/2026",
+    "equipo_local_id": 13,
+    "equipo_visitante_id": 14,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "13/06/2026",
+    "equipo_local_id": 15,
+    "equipo_visitante_id": 16,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "13/06/2026",
+    "equipo_local_id": 7,
+    "equipo_visitante_id": 8,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "13/06/2026",
+    "equipo_local_id": 9,
+    "equipo_visitante_id": 10,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "13/06/2026",
+    "equipo_local_id": 11,
+    "equipo_visitante_id": 12,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "14/06/2026",
+    "equipo_local_id": 17,
+    "equipo_visitante_id": 18,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "14/06/2026",
+    "equipo_local_id": 21,
+    "equipo_visitante_id": 22,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "14/06/2026",
+    "equipo_local_id": 19,
+    "equipo_visitante_id": 20,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "14/06/2026",
+    "equipo_local_id": 23,
+    "equipo_visitante_id": 24,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "15/06/2026",
+    "equipo_local_id": 29,
+    "equipo_visitante_id": 30,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "15/06/2026",
+    "equipo_local_id": 25,
+    "equipo_visitante_id": 26,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "15/06/2026",
+    "equipo_local_id": 31,
+    "equipo_visitante_id": 32,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "15/06/2026",
+    "equipo_local_id": 27,
+    "equipo_visitante_id": 28,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "16/06/2026",
+    "equipo_local_id": 39,
+    "equipo_visitante_id": 40,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "16/06/2026",
+    "equipo_local_id": 33,
+    "equipo_visitante_id": 34,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "16/06/2026",
+    "equipo_local_id": 35,
+    "equipo_visitante_id": 36,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "16/06/2026",
+    "equipo_local_id": 37,
+    "equipo_visitante_id": 38,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "17/06/2026",
+    "equipo_local_id": 41,
+    "equipo_visitante_id": 42,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "17/06/2026",
+    "equipo_local_id": 45,
+    "equipo_visitante_id": 46,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "17/06/2026",
+    "equipo_local_id": 47,
+    "equipo_visitante_id": 48,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "17/06/2026",
+    "equipo_local_id": 43,
+    "equipo_visitante_id": 44,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "18/06/2026",
+    "equipo_local_id": 4,
+    "equipo_visitante_id": 2,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "18/06/2026",
+    "equipo_local_id": 8,
+    "equipo_visitante_id": 6,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "18/06/2026",
+    "equipo_local_id": 5,
+    "equipo_visitante_id": 7,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "18/06/2026",
+    "equipo_local_id": 1,
+    "equipo_visitante_id": 3,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "19/06/2026",
+    "equipo_local_id": 16,
+    "equipo_visitante_id": 14,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "19/06/2026",
+    "equipo_local_id": 13,
+    "equipo_visitante_id": 15,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "19/06/2026",
+    "equipo_local_id": 12,
+    "equipo_visitante_id": 10,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "19/06/2026",
+    "equipo_local_id": 9,
+    "equipo_visitante_id": 11,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "20/06/2026",
+    "equipo_local_id": 24,
+    "equipo_visitante_id": 22,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "20/06/2026",
+    "equipo_local_id": 21,
+    "equipo_visitante_id": 23,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "20/06/2026",
+    "equipo_local_id": 17,
+    "equipo_visitante_id": 19,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "20/06/2026",
+    "equipo_local_id": 20,
+    "equipo_visitante_id": 18,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "21/06/2026",
+    "equipo_local_id": 29,
+    "equipo_visitante_id": 31,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "21/06/2026",
+    "equipo_local_id": 25,
+    "equipo_visitante_id": 27,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "21/06/2026",
+    "equipo_local_id": 32,
+    "equipo_visitante_id": 30,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "21/06/2026",
+    "equipo_local_id": 28,
+    "equipo_visitante_id": 26,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "22/06/2026",
+    "equipo_local_id": 37,
+    "equipo_visitante_id": 39,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "22/06/2026",
+    "equipo_local_id": 33,
+    "equipo_visitante_id": 35,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "22/06/2026",
+    "equipo_local_id": 36,
+    "equipo_visitante_id": 34,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "22/06/2026",
+    "equipo_local_id": 40,
+    "equipo_visitante_id": 38,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "23/06/2026",
+    "equipo_local_id": 41,
+    "equipo_visitante_id": 43,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "23/06/2026",
+    "equipo_local_id": 45,
+    "equipo_visitante_id": 47,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "23/06/2026",
+    "equipo_local_id": 48,
+    "equipo_visitante_id": 46,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "23/06/2026",
+    "equipo_local_id": 44,
+    "equipo_visitante_id": 42,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "24/06/2026",
+    "equipo_local_id": 8,
+    "equipo_visitante_id": 5,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "24/06/2026",
+    "equipo_local_id": 6,
+    "equipo_visitante_id": 7,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "24/06/2026",
+    "equipo_local_id": 9,
+    "equipo_visitante_id": 12,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "24/06/2026",
+    "equipo_local_id": 10,
+    "equipo_visitante_id": 11,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "24/06/2026",
+    "equipo_local_id": 4,
+    "equipo_visitante_id": 1,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "24/06/2026",
+    "equipo_local_id": 2,
+    "equipo_visitante_id": 3,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "25/06/2026",
+    "equipo_local_id": 18,
+    "equipo_visitante_id": 19,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "25/06/2026",
+    "equipo_local_id": 20,
+    "equipo_visitante_id": 17,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "25/06/2026",
+    "equipo_local_id": 22,
+    "equipo_visitante_id": 23,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "25/06/2026",
+    "equipo_local_id": 24,
+    "equipo_visitante_id": 21,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "25/06/2026",
+    "equipo_local_id": 16,
+    "equipo_visitante_id": 13,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "25/06/2026",
+    "equipo_local_id": 14,
+    "equipo_visitante_id": 15,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "26/06/2026",
+    "equipo_local_id": 36,
+    "equipo_visitante_id": 33,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "26/06/2026",
+    "equipo_local_id": 34,
+    "equipo_visitante_id": 35,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "26/06/2026",
+    "equipo_local_id": 30,
+    "equipo_visitante_id": 31,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "26/06/2026",
+    "equipo_local_id": 32,
+    "equipo_visitante_id": 29,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "26/06/2026",
+    "equipo_local_id": 26,
+    "equipo_visitante_id": 27,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "26/06/2026",
+    "equipo_local_id": 28,
+    "equipo_visitante_id": 25,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "27/06/2026",
+    "equipo_local_id": 48,
+    "equipo_visitante_id": 45,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "27/06/2026",
+    "equipo_local_id": 46,
+    "equipo_visitante_id": 47,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "27/06/2026",
+    "equipo_local_id": 44,
+    "equipo_visitante_id": 41,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "27/06/2026",
+    "equipo_local_id": 42,
+    "equipo_visitante_id": 43,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "27/06/2026",
+    "equipo_local_id": 38,
+    "equipo_visitante_id": 39,
+    "goles_local": -1,
+    "goles_visitante": -1
+  },
+  {
+    "fecha": "27/06/2026",
+    "equipo_local_id": 40,
+    "equipo_visitante_id": 37,
+    "goles_local": -1,
+    "goles_visitante": -1
+  }
+]
